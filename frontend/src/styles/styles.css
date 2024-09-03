@@ -1,0 +1,217 @@
+.background-login {
+  background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('https://use.fontawesome.com/releases/v5.15.4/svgs/solid/user-lock.svg');
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#logins {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.card {
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-google {
+  background-color: #db4437;
+  color: white;
+}
+
+.btn-google:hover {
+  background-color: #c33d30;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+h2 {
+  font-family: 'Arial', sans-serif;
+  color: #007bff;
+}
+
+.logo {
+  width: 30%;
+  display: block;
+  margin: 0 auto 20px auto;
+}
+
+
+
+
+
+
+  body {
+    padding-top: 80px; /* Ajuste de acordo com a altura da navbar */
+  }
+  .navbar {
+    margin-bottom: 20px; /* Espaço abaixo da navbar */
+  }
+
+
+.navbar-logo {
+  max-height: 50px;
+}
+
+.navbar-nav .nav-item .nav-link {
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  color: #007bff; /* Cor de hover */
+}
+
+.btn-outline-danger {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+
+
+
+
+
+
+
+
+.img-fixa-locais-lista {
+  width: 100%;
+  height: 300px; /* Defina a altura que você deseja para todas as imagens */
+  object-fit: cover; /* Isso garantirá que a imagem cubra toda a área do elemento sem distorcer */
+  display: block; /* Certifique-se de que a imagem seja exibida como um bloco */
+}
+
+.img-local-detalhes {
+  width: 100%;
+  height: 400px; /* Ajuste esta altura conforme necessário */
+  object-fit: cover; /* Garante que a imagem cubra toda a área do elemento sem distorcer */
+  display: block;
+  border-radius: 8px; /* Adiciona bordas arredondadas, opcional */
+}
+
+
+.img-evento {
+  width: 100%;
+  height: 300px; /* Ajuste a altura conforme necessário */
+  object-fit: cover; /* Garante que a imagem cubra toda a área do elemento sem distorcer */
+  display: block;
+}
+
+
+.img-fixa-evento-detalhes {
+  width: 100%;
+  height: 400px; /* Defina a altura que você deseja para todas as imagens */
+  object-fit: cover; /* Isso garantirá que a imagem cubra toda a área do elemento sem distorcer */
+  display: block; /* Certifique-se de que a imagem seja exibida como um bloco */
+  border-radius: 8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  .navbar-logo {
+    width: 150px;
+    height: 50px;
+    margin-right: 15px;
+  }
+  
+  .nav-link {
+    font-weight: bold;
+  }
+  
+  .navbar-toggler-icon {
+    color: #007bff;
+  }
+  
+  .btn-outline-danger {
+    font-weight: bold;
+  }
+  
+  .dropdown-menu {
+    font-size: 0.9rem;
+  }
+  
+  @media (max-width: 768px) {
+    .navbar-logo {
+      margin: 0 auto;
+    }
+  }
+  
+
+
+  .background-register {
+    background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('https://use.fontawesome.com/releases/v5.15.4/svgs/solid/user-plus.svg');
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+
+  /* Dashboard.css */
+.dashboard-container {
+  padding: 20px;
+  background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard-title {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.chart-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: calc(33% - 40px);
+  min-width: 300px;
+}
+
+.map-container {
+  height: 400px;
+  width: 100%;
+}

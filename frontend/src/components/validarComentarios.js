@@ -1,0 +1,136 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Swal from 'sweetalert2';
+
+const ComentariosNaoValidados = () => {
+    const [comentarios, setComentarios] = useState([]);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        fetchComentarios();
+    }, []);
+
+    const fetchComentarios = async () => {
+        try {
+            const comentariosResponse = await axios.get(`http://localhost:3000/comentarios_evento/listeventoinvalido`);
+            setComentarios(comentariosResponse.data);
+        } catch (error) {
+            console.error('Erro ao listar comentários não validados:', error);
+            setError('Erro ao listar comentários não validados.');
+        }
+    };
+
+    const deleteComentario = async (id) => {
+        try {
+            await axios.delete(`http://localhost:3000/comentarios_evento/delete/${id}`, {
+                headers: {
+                    'x-auth-token': sessionStorage.getItem('token')
+                }
+            });
+            setComentarios(comentarios.filter(comentario => comentario.ID_COMENTARIO !== id));
+            Swal.fire({
+                icon: 'success',
+                title: 'Eliminado!',
+                text: 'O comentário foi eliminado com sucesso.'
+            });
+        } catch (error) {
+            console.error('Erro ao eliminar comentário:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Ocorreu um erro ao eliminar o comentário.'
+            });
+        }
+    };
+
+    const confirmDelete = (id) => {
+        Swal.fire({
+            title: 'Tem a certeza?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, eliminar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteComentario(id);
+            }
+        });
+    };
+
+    const validarComentario = async (comentarioId) => {
+        try {
+            await axios.put(`http://localhost:3000/comentarios_evento/validar/${comentarioId}`);
+            Swal.fire({
+                icon: 'success',
+                title: 'Validado!',
+                text: 'O comentário foi validado com sucesso.'
+            });
+            fetchComentarios(); 
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Erro ao validar comentário: ' + (error.response?.data?.message || 'Erro desconhecido.')
+            });
+        }
+    };
+
+    const formatarData = (dataStr) => {
+        const data = new Date(dataStr);
+        return data.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: '2-digit'
+        });
+    };
+
+    return (
+        <div className="container mt-4">
+            <h1 className="mb-4">Comentários Não Validados - Eventos</h1>
+            {error && <div className="alert alert-danger">{error}</div>}
+            <div className="table-responsive">
+                <table className="table table-striped">
+                    <thead className="thead-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Comentário</th>
+                            <th>Data</th>
+                            <th>Nome do Evento</th>  {/* Novo campo para o número do evento */}
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {comentarios.map(comentario => (
+                            <tr key={comentario.ID_COMENTARIO}>
+                                <td>{comentario.ID_COMENTARIO}</td>
+                                <td>{comentario.DESCRICAO}</td>
+                                <td>{formatarData(comentario.DATA_COMENTARIO)}</td>
+                                <td>{comentario.evento.NOME_EVENTO}</td>  {/* Exibe o número do evento */}
+                                {/*<td>{comentario.evento.NOME_EVENTO}</td>*/}  
+                                <td>
+                                    <button
+                                        className="btn btn-primary"
+                                        onClick={() => validarComentario(comentario.ID_COMENTARIO)}
+                                    >
+                                        Validar
+                                    </button>
+                                    <button
+                                        onClick={() => confirmDelete(comentario.ID_COMENTARIO)}
+                                        className="btn btn-danger mt-auto"
+                                        style={{ float: 'right' }}
+                                    >
+                                        <i className="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
+export default ComentariosNaoValidados;
