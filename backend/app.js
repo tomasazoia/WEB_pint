@@ -218,7 +218,9 @@ app.use('/reportlocais', reportLocaisRoutes);
 app.use('/infos', infos);
 
 syncDatabase();
-
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'frontend/build', 'index.html'));
+});
 app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
