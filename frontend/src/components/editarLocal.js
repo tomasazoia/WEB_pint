@@ -34,7 +34,7 @@ const EditarLocal = () => {
   useEffect(() => {
     const fetchLocal = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/locais/get/${id}`);
+        const response = await axios.get(`https://pint-backend-5gz8.onrender.com/locais/get/${id}`);
         setLocal(response.data);
       } catch (error) {
         console.error('Erro ao carregar dados do local:', error);
@@ -44,7 +44,7 @@ const EditarLocal = () => {
 
     const fetchAreas = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/area/list');
+        const response = await axios.get('https://pint-backend-5gz8.onrender.com/area/list');
         setAreas(response.data);
       } catch (error) {
         console.error('Erro ao carregar áreas:', error);
@@ -97,7 +97,7 @@ const EditarLocal = () => {
     const fetchSubAreas = async () => {
       if (local.ID_AREA) {
         try {
-          const response = await axios.get(`http://localhost:3000/subarea/list/${local.ID_AREA}`);
+          const response = await axios.get(`https://pint-backend-5gz8.onrender.com/subarea/list/${local.ID_AREA}`);
           if (response.data.length > 0) {
             setSubAreas(response.data);
           } else {
@@ -171,7 +171,7 @@ const EditarLocal = () => {
     }
 
     try {
-      await axios.put(`http://localhost:3000/locais/edit/${id}`, formData, {
+      await axios.put(`https://pint-backend-5gz8.onrender.com/locais/edit/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -251,14 +251,20 @@ const EditarLocal = () => {
             onChange={handleChange}></div>
         </div>
         <div className="form-group p-2">
-          <label>Review:</label>
-          <input
-            type="text"
+          <label>Minha Review:</label>
+          <select
             className="form-control"
             name="REVIEW"
             value={local.REVIEW}
             onChange={handleChange}
-          />
+          >
+            <option value="">Selecione uma avaliação</option>
+            {[...Array(11).keys()].map((value) => (
+              <option key={value / 2} value={value / 2}>
+                {value / 2}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-group p-2">
           <label>Preço:</label> {/* Novo campo */}

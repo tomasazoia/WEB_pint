@@ -26,7 +26,7 @@ const CalendarioEventos = () => {
             if (!token) throw new Error('Token de autenticação não encontrado.');
     
             // Fazendo a solicitação para obter o perfil do usuário autenticado
-            const userProfileResponse = await axios.get('http://localhost:3000/user/profile', {
+            const userProfileResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
                 headers: {
                     'x-auth-token': token
                 }
@@ -37,7 +37,7 @@ const CalendarioEventos = () => {
             if (!userId) throw new Error('Erro ao obter dados do usuário ou centro.');
     
             // Fazendo a solicitação para listar os eventos disponíveis no centro do usuário
-            const response = await axios.get(`http://localhost:3000/evento/listdispcal/${userId}`);
+            const response = await axios.get(`https://pint-backend-5gz8.onrender.com/evento/listdispcal/${userId}`);
             const eventosFormatados = response.data.map(evento => ({
                 id: evento.ID_EVENTO,
                 title: evento.NOME_EVENTO,

@@ -11,6 +11,7 @@ import L from 'leaflet';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerIconRetina from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
 const MySwal = withReactContent(Swal);
 
 const CriarEvento = () => {
@@ -35,22 +36,22 @@ const CriarEvento = () => {
     NEW_SUB_AREA: ''
   });
   const [error, setError] = useState(null);
-  const [isFormActive, setIsFormActive] = useState(true); // Novo estado para armazenar o status do formulário
+  const [isFormActive, setIsFormActive] = useState(true);
 
   const navigate = useNavigate();
-  const mapRef = useRef(null); // Referência para o mapa
+  const mapRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [utilizadoresResponse, areasResponse, formStatusResponse] = await Promise.all([
-          axios.get('http://localhost:3000/user/list'),
-          axios.get('http://localhost:3000/area/list'),
-          axios.get('http://localhost:3000/formularios/status/2') // Substitua pela rota correta
+          axios.get('https://pint-backend-5gz8.onrender.com/user/list'),
+          axios.get('https://pint-backend-5gz8.onrender.com/area/list'),
+          axios.get('https://pint-backend-5gz8.onrender.com/formularios/status/2')
         ]);
         setUtilizadores(utilizadoresResponse.data);
         setAreas(areasResponse.data);
-        setIsFormActive(formStatusResponse.data.ATIVO); // Verifique se o formulário está ativo ou não
+        setIsFormActive(formStatusResponse.data.ATIVO);
       } catch (error) {
         console.error('Erro ao procurar dados:', error);
         MySwal.fire({
@@ -72,7 +73,7 @@ const CriarEvento = () => {
         shadowSize: [41, 41]
       });
 
-      mapRef.current = L.map('map').setView([40.6574, -7.9140], 14); //coordenadas do rossio de viseu
+      mapRef.current = L.map('map').setView([40.6574, -7.9140], 14);
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
@@ -98,7 +99,6 @@ const CriarEvento = () => {
       });
     }
   }, []);
-  
 
   useEffect(() => {
     const token = sessionStorage.getItem('token');
@@ -108,7 +108,7 @@ const CriarEvento = () => {
       return;
     }
 
-    axios.get('http://localhost:3000/user/profile', {
+    axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
       headers: {
         'x-auth-token': token
       }
@@ -133,9 +133,10 @@ const CriarEvento = () => {
 
   const fetchSubAreas = async (areaId) => {
     try {
-      const response = await axios.get(`http://localhost:3000/subarea/list/${areaId}`);
-      setSubAreas(response.data);
+      const response = await axios.get(`https://pint-backend-5gz8.onrender.com/subarea/list/${areaId}`);
+      setSubAreas(response.data); // Atualiza com as novas subáreas
     } catch (error) {
+      setSubAreas([]); // Limpa as subáreas se a área não tiver subáreas
       console.error('Nao existem subareas para a area selecionada:', error);
       MySwal.fire({
         icon: 'error',
@@ -144,24 +145,26 @@ const CriarEvento = () => {
       });
     }
   };
-  
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormValues({
-      ...formValues,
-      [name]: type === 'checkbox' ? checked : value
-    });
-
-    if (name === 'ID_AREA') {
-      fetchSubAreas(value);
-      setFormValues(prevFormValues => ({
+    setFormValues((prevFormValues) => {
+      const updatedFormValues = {
         ...prevFormValues,
-        ID_SUB_AREA: '',
-        NEW_SUB_AREA: ''
-      }));
-      setShowNewSubArea(false);
-    }
+        [name]: type === 'checkbox' ? checked : value
+      };
+  
+      // Reseta o campo de subárea e nova subárea quando a área é alterada
+      if (name === 'ID_AREA') {
+        setSubAreas([]); // Limpa as subáreas antes de buscar novas
+        fetchSubAreas(value); // Busca as subáreas da nova área
+        updatedFormValues.ID_SUB_AREA = '';
+        updatedFormValues.NEW_SUB_AREA = '';
+        setShowNewSubArea(false);
+      }
+  
+      return updatedFormValues;
+    });
   };
 
   const dataAtual = new Date().toISOString().split('T')[0];
@@ -176,7 +179,7 @@ const CriarEvento = () => {
   const checkAndCreateSubArea = async () => {
     try {
       if (showNewSubArea && formValues.NEW_SUB_AREA) {
-        const response = await axios.post('http://localhost:3000/subarea/check', {
+        const response = await axios.post('https://pint-backend-5gz8.onrender.com/subarea/check', {
           subArea: formValues.NEW_SUB_AREA,
           ID_AREA: formValues.ID_AREA
         });
@@ -193,36 +196,35 @@ const CriarEvento = () => {
       throw error;
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const subAreaId = await checkAndCreateSubArea();
       const formData = new FormData();
-      
+
       for (const key in formValues) {
         if (key !== 'ID_AREA' && key !== 'ID_SUB_AREA') {
           formData.append(key, formValues[key]);
         }
       }
-      
+
       formData.append('ID_AREA', formValues.ID_AREA);
-      
-      // Ajustar o valor de ID_SUB_AREA para null se estiver vazio
       formData.append('ID_SUB_AREA', subAreaId ? subAreaId : '');
-  
-      const eventoResponse = await axios.post('http://localhost:3000/evento/create', formData, {
+
+      const eventoResponse = await axios.post('https://pint-backend-5gz8.onrender.com/evento/create', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
-  
+
       MySwal.fire({
         icon: 'success',
         title: 'Sucesso',
-        text: `Evento criado com sucesso! ID: ${eventoResponse.data.id}`
+        text: `Evento criado com sucesso!`
       });
-  
+
       navigate('/evento/manage');
     } catch (error) {
       console.error('Erro ao criar evento:', error);
@@ -233,7 +235,6 @@ const CriarEvento = () => {
       });
     }
   };
-  
 
   return (
     <div className="container mt-4">
@@ -297,18 +298,16 @@ const CriarEvento = () => {
             value={formValues.ID_AREA}
             onChange={handleInputChange}
             required
-            disabled={!isFormActive} // Desabilita se o formulário estiver inativo
+            disabled={!isFormActive}
           >
-            <option value="">Selecione uma área</option>
-            {areas.map((area) => (
-              <option key={area.ID_AREA} value={area.ID_AREA}>
-                {area.NOME_AREA}
-              </option>
+            <option value="">Selecione uma Área</option>
+            {areas.map(area => (
+              <option key={area.ID_AREA} value={area.ID_AREA}>{area.NOME_AREA}</option>
             ))}
           </select>
         </div>
 
-        {subAreas.length > 0 && !showNewSubArea && (
+        {subAreas.length > 0 && (
           <div className="mb-3">
             <label htmlFor="ID_SUB_AREA" className="form-label">Subárea</label>
             <select
@@ -317,28 +316,30 @@ const CriarEvento = () => {
               className="form-control"
               value={formValues.ID_SUB_AREA}
               onChange={handleInputChange}
-              disabled={!isFormActive} // Desabilita se o formulário estiver inativo
+              disabled={!isFormActive || showNewSubArea}
+              required={!showNewSubArea}
             >
-              <option value="">Selecione uma subárea</option>
-              {subAreas.map((subArea) => (
-                <option key={subArea.ID_SUB_AREA} value={subArea.ID_SUB_AREA}>
-                  {subArea.NOME_SUBAREA}
-                </option>
+              <option value="">Selecione uma Subárea</option>
+              {subAreas.map(subArea => (
+                <option key={subArea.ID_SUB_AREA} value={subArea.ID_SUB_AREA}>{subArea.NOME_SUBAREA}</option>
               ))}
             </select>
           </div>
         )}
 
-        {!showNewSubArea && (
-          <button
-            type="button"
-            className="btn btn-secondary mb-3"
-            onClick={() => setShowNewSubArea(true)}
-            disabled={!isFormActive} // Desabilita se o formulário estiver inativo
-          >
-            Criar Nova Subárea
-          </button>
-        )}
+        <div className="mb-3 form-check">
+          <input
+            type="checkbox"
+            id="newSubAreaCheckbox"
+            className="form-check-input"
+            checked={showNewSubArea}
+            onChange={(e) => setShowNewSubArea(e.target.checked)}
+            disabled={!isFormActive}
+          />
+          <label className="form-check-label" htmlFor="newSubAreaCheckbox">
+            Criar nova subárea
+          </label>
+        </div>
 
         {showNewSubArea && (
           <div className="mb-3">
@@ -351,7 +352,7 @@ const CriarEvento = () => {
               value={formValues.NEW_SUB_AREA}
               onChange={handleInputChange}
               required={showNewSubArea}
-              disabled={!isFormActive} // Desabilita se o formulário estiver inativo
+              disabled={!isFormActive}
             />
           </div>
         )}

@@ -9,5 +9,8 @@ router.post('/create', comentarioController.comentario_create);
 router.put('/update/:id', comentarioController.comentario_update);
 router.delete('/delete/:idComentario', comentarioController.comentario_delete);
 router.get('/list/:idForum', comentarioController.listarComentariosPorForum);
+router.get('/listforuminvalido', comentarioController.listarComentariosPorForumInv);
+router.put('/validar/:idComentario', comentarioController.validarComentarioForum);
+router.put('/invalidar/:idComentario', comentarioController.invalidarComentarioForum);
 
 module.exports = router;

@@ -114,6 +114,7 @@ const listarComentariosPorArea = async (req, res) => {
         res.status(500).json({ message: 'Erro ao listar fóruns por área.', error: error.message });
     }
 };
+
 const validarComentario = async (req, res) => {
     const { idComentario } = req.params;
 
@@ -152,7 +153,6 @@ const validarComentario = async (req, res) => {
     }
 };
 
-
 const invalidarComentario = async (req, res) => {
     const { idComentario } = req.params;
 
@@ -171,6 +171,7 @@ const invalidarComentario = async (req, res) => {
         res.status(500).json({ error: 'Ocorreu um erro ao invalidar o comentário.' });
     }
 };
+
 const listarComentariosPorEventoInv = async (req, res) => {
     try {
         const comentarios = await ComentariosEvento.findAll({

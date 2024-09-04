@@ -36,9 +36,9 @@ const AddLocal = () => {
   useEffect(() => {
     const fetchAreas = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/area/list');
+        const response = await axios.get('https://pint-backend-5gz8.onrender.com/area/list');
         setAreas(response.data);
-        const formStatusResponse = await axios.get('http://localhost:3000/formularios/status/3');
+        const formStatusResponse = await axios.get('https://pint-backend-5gz8.onrender.com/formularios/status/3');
         setIsFormActive(formStatusResponse.data.ATIVO);
       } catch (error) {
         console.error('Erro ao carregar áreas:', error);
@@ -55,7 +55,7 @@ const AddLocal = () => {
         const token = sessionStorage.getItem('token');
         if (!token) throw new Error('Token de autenticação não encontrado');
 
-        const response = await axios.get('http://localhost:3000/user/profile', {
+        const response = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
           headers: {
             'x-auth-token': token
           }
@@ -90,7 +90,7 @@ const AddLocal = () => {
         shadowSize: [41, 41]
       });
 
-      mapRef.current = L.map('map').setView([40.6574, -7.9140], 14); //coordenadas do rossio de viseu
+      mapRef.current = L.map('map').setView([40.6574, -7.9140], 14); // coordenadas do Rossio de Viseu
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
@@ -121,10 +121,11 @@ const AddLocal = () => {
     const fetchSubAreas = async () => {
       if (formValues.ID_AREA) {
         try {
-          const response = await axios.get(`http://localhost:3000/subarea/list/${formValues.ID_AREA}`);
+          const response = await axios.get(`https://pint-backend-5gz8.onrender.com/subarea/list/${formValues.ID_AREA}`);
           setSubAreas(response.data);
         } catch (error) {
           console.error('Nao existem subareas para a area selecionada:', error);
+          setSubAreas([]); // Limpar subáreas se houver erro
           MySwal.fire({
             icon: 'error',
             title: 'Erro',
@@ -132,7 +133,7 @@ const AddLocal = () => {
           });
         }
       } else {
-        setSubAreas([]);
+        setSubAreas([]); // Limpar subáreas se nenhuma área estiver selecionada
       }
     };
 
@@ -141,10 +142,22 @@ const AddLocal = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormValues({
-      ...formValues,
-      [name]: type === 'checkbox' ? checked : value
-    });
+
+    // Se a área mudar, resetar subárea e subárea nova
+    if (name === "ID_AREA") {
+      setFormValues({
+        ...formValues,
+        [name]: value,
+        ID_SUB_AREA: "", // Resetar o campo de subárea
+        NOVA_SUB_AREA: "" // Opcional: resetar o campo de nova subárea também
+      });
+      setSubAreas([]); // Limpa subáreas ao mudar a área
+    } else {
+      setFormValues({
+        ...formValues,
+        [name]: type === 'checkbox' ? checked : value
+      });
+    }
   };
 
   const handleFileChange = (e) => {
@@ -155,13 +168,12 @@ const AddLocal = () => {
   };
 
   const checkAndCreateSubArea = async () => {
-    // Verifica se o campo NOVA_SUB_AREA foi preenchido
     if (!formValues.NOVA_SUB_AREA) {
       return formValues.ID_SUB_AREA || null; // Retorna a subárea selecionada ou null
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/subarea/check', {
+      const response = await axios.post('https://pint-backend-5gz8.onrender.com/subarea/check', {
         subArea: formValues.NOVA_SUB_AREA,
         ID_AREA: formValues.ID_AREA
       });
@@ -191,11 +203,9 @@ const AddLocal = () => {
         }
       }
       formData.append('ID_AREA', formValues.ID_AREA);
-      // Ajustar o valor de ID_SUB_AREA para null se estiver vazio
       formData.append('ID_SUB_AREA', subAreaId ? subAreaId : '');
 
-      // Criar o local
-      const response = await axios.post('http://localhost:3000/locais/create', formData, {
+      const response = await axios.post('https://pint-backend-5gz8.onrender.com/locais/create', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -203,9 +213,8 @@ const AddLocal = () => {
 
       const createdLocalId = response.data.ID_LOCAL;
 
-      // Adicionar a review à tabela review
       if (formValues.REVIEW) {
-        await axios.post('http://localhost:3000/review/create', {
+        await axios.post('https://pint-backend-5gz8.onrender.com/review/create', {
           ID_CRIADOR: formValues.ID_CRIADOR,
           REVIEW: formValues.REVIEW,
           ID_LOCAL: createdLocalId,
@@ -319,20 +328,22 @@ const AddLocal = () => {
           <div id="map" style={{ width: "100%", height: "400px" }}></div>
         </div>
 
-        <div className="mb-3">
-          <label htmlFor="REVIEW" className="form-label">Review</label>
-          <input
-            type="number"
-            step="0.5"
+        <div className="form-group p-2">
+          <label htmlFor="REVIEW" className="form-label">Minha Review</label>
+          <select
+            className="form-control"
             id="REVIEW"
             name="REVIEW"
-            className="form-control"
             value={formValues.REVIEW}
             onChange={handleInputChange}
-            min="0"
-            max="5"
-            disabled={!isFormActive}
-          />
+          >
+            <option value="">Selecione uma avaliação</option>
+            {[...Array(11).keys()].map((value) => (
+              <option key={value / 2} value={value / 2}>
+                {value / 2}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="mb-3">

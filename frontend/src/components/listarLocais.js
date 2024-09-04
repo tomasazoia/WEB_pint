@@ -10,6 +10,7 @@ import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 const ListarLocais = () => {
   const [locais, setLocais] = useState([]);
   const [error, setError] = useState('');
+  const [totalReviews, setTotalReviews] = useState(0); // Novo estado para o número de avaliações
 
   useEffect(() => {
     fetchUserIdAndLocais();
@@ -17,51 +18,61 @@ const ListarLocais = () => {
 
   const fetchUserIdAndLocais = async () => {
     const token = sessionStorage.getItem('token');
-
+  
     if (!token) {
-        setError('Token de autenticação não encontrado.');
-        return;
+      setError('Token de autenticação não encontrado.');
+      return;
     }
-
+  
     try {
-        const userResponse = await axios.get('http://localhost:3000/user/profile', {
-            headers: {
-                'x-auth-token': token
-            }
-        });
-        const idCentro = userResponse.data.ID_CENTRO;
-
-        if (!idCentro) {
-            setError('ID do Centro não encontrado.');
-            return;
+      const userResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
+        headers: {
+          'x-auth-token': token
         }
-
-        const userId = userResponse.data.ID_FUNCIONARIO;
-        if (!userId) throw new Error('Erro ao obter dados do usuário ou centro.');
-
-        const locaisResponse = await axios.get(`http://localhost:3000/locais/user/${userId}/centro`, {
-            headers: {
-                'x-auth-token': token
-            },
-            params: {
-                ID_CENTRO: idCentro
-            }
-        });
-
-        const locaisWithCity = await Promise.all(
-          locaisResponse.data.map(async (local) => {
-            const city = await getCityFromCoordinates(local.LOCALIZACAO);
-            return { ...local, cidade: city };
-          })
-        );
-
-        setLocais(locaisWithCity);
-
+      });
+      const idCentro = userResponse.data.ID_CENTRO;
+  
+      if (!idCentro) {
+        setError('ID do Centro não encontrado.');
+        return;
+      }
+  
+      const userId = userResponse.data.ID_FUNCIONARIO;
+      if (!userId) throw new Error('Erro ao obter dados do usuário ou centro.');
+  
+      const locaisResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/locais/user/${userId}/centro`, {
+        headers: {
+          'x-auth-token': token
+        },
+        params: {
+          ID_CENTRO: idCentro
+        }
+      });
+  
+      const locaisWithCityAndReview = await Promise.all(
+        locaisResponse.data.map(async (local) => {
+          const city = await getCityFromCoordinates(local.LOCALIZACAO);
+  
+          // Buscando a média de reviews para cada local
+          const averageReviewResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/review/average/local/${local.ID_LOCAL}`);
+          const averageReview = averageReviewResponse.data.averageReview || 0;
+  
+          // Buscando o total de reviews para cada local
+          const totalReviewsResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/review/local/get/${local.ID_LOCAL}`);
+          const totalReviews = totalReviewsResponse.data.count || 0;  // Use o valor de 'count' corretamente
+  
+          return { ...local, cidade: city, averageReview, totalReviews }; // Armazene totalReviews no objeto 'local'
+        })
+      );
+  
+      setLocais(locaisWithCityAndReview);
+  
     } catch (error) {
-        setError('Erro ao carregar os dados.');
-        console.error('Erro ao carregar os dados:', error);
+      setError('Erro ao carregar os dados.');
+      console.error('Erro ao carregar os dados:', error);
     }
   };
+  
 
   const getCityFromCoordinates = async (coordinates) => {
     const [latitude, longitude] = coordinates.split(',').map(coord => coord.trim());
@@ -82,7 +93,7 @@ const ListarLocais = () => {
 
   const deleteLocal = async (id) => {
     try {
-      await axios.put(`http://localhost:3000/locais/invalidate/${id}`, {
+      await axios.put(`https://pint-backend-5gz8.onrender.com/locais/invalidate/${id}`, {
         headers: {
           'x-auth-token': sessionStorage.getItem('token')
         }
@@ -135,9 +146,9 @@ const ListarLocais = () => {
   return (
     <div className="container mt-4">
       <h1>Lista de Estabelecimentos</h1>
-        <Link to={`/locais/create`} className="btn btn-primary" style={{ color: 'white' }}>
-          Adicionar Estabelecimento
-        </Link>
+      <Link to={`/locais/create`} className="btn btn-primary" style={{ color: 'white' }}>
+        Adicionar Estabelecimento
+      </Link>
       <div className="row">
         {locais.map((local) => (
           <div className="col-md-3 mt-4" key={local.ID_LOCAL}>
@@ -145,7 +156,7 @@ const ListarLocais = () => {
               <Link to={`/locais/get/${local.ID_LOCAL}`}>
                 {local.foto && (
                   <img
-                    src={`http://localhost:3000/${local.foto}`}
+                    src={`https://pint-backend-5gz8.onrender.com/${local.foto}`}
                     className="card-img-top img-fixa-locais-lista"
                     alt={local.DESIGNACAO_LOCAL}
                   />
@@ -154,9 +165,11 @@ const ListarLocais = () => {
               <div className="card-body d-flex flex-column">
                 <h5 className="card-title">{local.DESIGNACAO_LOCAL}</h5>
                 <p className="card-text flex-grow-1"><strong>Localização:</strong> {local.cidade || 'Cidade Desconhecida'}</p>
-                {local.REVIEW && (
+                {/* Exibir média de avaliações se houver */}
+                {local.averageReview > 0 && (
                   <p className="card-text">
-                    <small className="text-muted">Avaliação: {renderStars(local.REVIEW)}</small>
+                    <strong>Avaliação Média:</strong> {renderStars(local.averageReview)}
+                    <span> ({local.totalReviews} avaliações)</span> {/* Use local.totalReviews aqui */}
                   </p>
                 )}
                 {local.area && (
@@ -182,6 +195,7 @@ const ListarLocais = () => {
       </div>
     </div>
   );
+  
 };
 
 export default ListarLocais;

@@ -24,14 +24,14 @@ const AlbumFotosEvento = () => {
             }
 
             try {
-                const userResponse = await axios.get('http://localhost:3000/user/profile', {
+                const userResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
                     headers: {
                         'x-auth-token': token
                     }
                 });
                 setUserId(userResponse.data.ID_FUNCIONARIO); // Definindo userId
 
-                const response = await axios.get(`http://localhost:3000/album/evento/${id}`);
+                const response = await axios.get(`https://pint-backend-5gz8.onrender.com/album/evento/${id}`);
                 setFotos(response.data);
             } catch (error) {
                 console.error('Erro ao carregar fotos:', error);
@@ -63,7 +63,7 @@ const AlbumFotosEvento = () => {
         formData.append('ID_CRIADOR', userId);
 
         try {
-            await axios.post('http://localhost:3000/album/create', formData, {
+            await axios.post('https://pint-backend-5gz8.onrender.com/album/create', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -74,7 +74,7 @@ const AlbumFotosEvento = () => {
             if (fileInputRef.current) {
                 fileInputRef.current.value = '';
             }
-            const response = await axios.get(`http://localhost:3000/album/evento/${id}`);
+            const response = await axios.get(`https://pint-backend-5gz8.onrender.com/album/evento/${id}`);
             setFotos(response.data);
 
             // Fecha o modal usando o estado do React
@@ -87,7 +87,7 @@ const AlbumFotosEvento = () => {
 
     const handleDelete = async (fotoId) => {
         try {
-            await axios.delete(`http://localhost:3000/album/delete/${fotoId}`);
+            await axios.delete(`https://pint-backend-5gz8.onrender.com/album/delete/${fotoId}`);
             Swal.fire('Sucesso', 'Foto deletada com sucesso!', 'success');
             setFotos(fotos.filter(foto => foto.ID_FOTO !== fotoId));
         } catch (error) {
@@ -107,7 +107,7 @@ const AlbumFotosEvento = () => {
                             <div className="col-sm-6 col-md-4" key={foto.ID_FOTO}>
                                 <div className="position-relative">
                                     <img
-                                        src={`http://localhost:3000/${foto.foto}`}
+                                        src={`https://pint-backend-5gz8.onrender.com/${foto.foto}`}
                                         alt={foto.LEGENDA}
                                         className="img-fluid rounded"
                                         style={{ objectFit: 'cover', width: '100%', height: '300px' }}

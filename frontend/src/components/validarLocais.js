@@ -21,7 +21,7 @@ const LocaisNaoValidados = () => {
         }
 
         try {
-            const userResponse = await axios.get('http://localhost:3000/user/profile', {
+            const userResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
                 headers: {
                     'x-auth-token': token
                 }
@@ -33,7 +33,7 @@ const LocaisNaoValidados = () => {
                 return;
             }
 
-            const locaisResponse = await axios.get(`http://localhost:3000/locais/invalid/user/${userResponse.data.ID_FUNCIONARIO}/centro`, {
+            const locaisResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/locais/invalid/user/${userResponse.data.ID_FUNCIONARIO}/centro`, {
                 headers: {
                     'x-auth-token': token
                 }
@@ -55,7 +55,7 @@ const LocaisNaoValidados = () => {
     };
     const deleteLocal = async (id) => {
         try {
-            await axios.delete(`http://localhost:3000/locais/delete/${id}`, {
+            await axios.delete(`https://pint-backend-5gz8.onrender.com/locais/delete/${id}`, {
                 headers: {
                     'x-auth-token': sessionStorage.getItem('token')  // Incluir o token na requisição de deleção
                 }
@@ -110,7 +110,7 @@ const LocaisNaoValidados = () => {
 
     const validarLocal = async (localId) => {
         try {
-            await axios.put(`http://localhost:3000/locais/validate/${localId}`);
+            await axios.put(`https://pint-backend-5gz8.onrender.com/locais/validate/${localId}`);
             alert('Local validado com sucesso!');
             fetchLocais(); 
         } catch (error) {

@@ -373,8 +373,26 @@ const listEventosByArea = async (req, res) => {
         DISPONIBILIDADE: true
       },
       include: [
-        { model: Centro },
-        { model: Users }
+        {
+          model: Users,
+          as: 'User', // Alias utilizado na associação
+          attributes: ['user_name'] // Apenas os atributos que deseja retornar
+        },
+        {
+          model: Area,
+          as: 'area', // Alias utilizado na associação
+          attributes: ['NOME_AREA']
+        },
+        {
+          model: Centro,
+          as: 'centro', // Alias utilizado na associação
+          attributes: ['NOME_CENTRO']
+        },
+        {
+          model: Subarea,
+          as: 'sub_area',
+          attributes: ['ID_SUB_AREA', 'NOME_SUBAREA']
+        }
       ]
     });
 
@@ -519,12 +537,24 @@ const listEventosBySubArea = async (req, res) => {
       },
       include: [
         {
-          model: Subarea,
-          attributes: ['NOME_SUBAREA']
+          model: Users,
+          as: 'User', // Alias utilizado na associação
+          attributes: ['user_name'] // Apenas os atributos que deseja retornar
         },
         {
           model: Area,
+          as: 'area', // Alias utilizado na associação
           attributes: ['NOME_AREA']
+        },
+        {
+          model: Centro,
+          as: 'centro', // Alias utilizado na associação
+          attributes: ['NOME_CENTRO']
+        },
+        {
+          model: Subarea,
+          as: 'sub_area',
+          attributes: ['ID_SUB_AREA', 'NOME_SUBAREA']
         }
       ]
     });

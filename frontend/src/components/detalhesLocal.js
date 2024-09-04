@@ -31,16 +31,16 @@ const DetalhesLocal = () => {
   useEffect(() => {
     const fetchLocal = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/locais/get/${id}`);
+        const response = await axios.get(`https://pint-backend-5gz8.onrender.com/locais/get/${id}`);
         setLocal(response.data);
 
-        const averageReviewResponse = await axios.get(`http://localhost:3000/review/average/local/${id}`);
+        const averageReviewResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/review/average/local/${id}`);
         setAverageReview(averageReviewResponse.data.averageReview);
 
-        const comentariosResponse = await axios.get(`http://localhost:3000/comentarios_local/listlocal/${id}`);
+        const comentariosResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/comentarios_local/listlocal/${id}`);
         setComentarios(comentariosResponse.data);
 
-        const totalReviewsResponse = await axios.get(`http://localhost:3000/review/local/get/${id}`);
+        const totalReviewsResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/review/local/get/${id}`);
         setTotalReviews(totalReviewsResponse.data.count);
 
         setErro('');
@@ -101,7 +101,7 @@ const DetalhesLocal = () => {
 
       if (!token) throw new Error('Token de autenticação não encontrado.');
 
-      const userProfileResponse = await axios.get('http://localhost:3000/user/profile', {
+      const userProfileResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
         headers: {
           'x-auth-token': token
         }
@@ -116,12 +116,12 @@ const DetalhesLocal = () => {
         REVIEW: newReview
       };
 
-      await axios.post(`http://localhost:3000/review/local/${id}`, reviewData);
+      await axios.post(`https://pint-backend-5gz8.onrender.com/review/local/${id}`, reviewData);
 
-      const averageReviewResponse = await axios.get(`http://localhost:3000/review/average/local/${id}`);
+      const averageReviewResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/review/average/local/${id}`);
       setAverageReview(averageReviewResponse.data.averageReview);
 
-      const totalReviewsResponse = await axios.get(`http://localhost:3000/review/local/get/${id}`);
+      const totalReviewsResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/review/local/get/${id}`);
       setTotalReviews(totalReviewsResponse.data.count);
 
       setNewReview('');
@@ -138,7 +138,7 @@ const DetalhesLocal = () => {
 
       if (!token) throw new Error('Token de autenticação não encontrado.');
 
-      const userProfileResponse = await axios.get('http://localhost:3000/user/profile', {
+      const userProfileResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
         headers: { 'x-auth-token': token }
       });
 
@@ -152,7 +152,7 @@ const DetalhesLocal = () => {
         ID_LOCAL: local.ID_LOCAL,
       };
 
-      await axios.post('http://localhost:3000/comentarios_local/create', comentarioData);
+      await axios.post('https://pint-backend-5gz8.onrender.com/comentarios_local/create', comentarioData);
       Swal.fire({
         title: 'Comentário enviado!',
         text: 'O seu comentário aguarda confirmação.',
@@ -161,7 +161,7 @@ const DetalhesLocal = () => {
       });
       setNovoComentario('');
 
-      const comentariosResponse = await axios.get(`http://localhost:3000/comentarios_local/listlocal/${id}`);
+      const comentariosResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/comentarios_local/listlocal/${id}`);
       setComentarios(comentariosResponse.data);
     } catch (error) {
       console.error('Erro ao adicionar comentário:', error);
@@ -171,7 +171,7 @@ const DetalhesLocal = () => {
 
   const handleDeleteComentario = async (idComentario) => {
     try {
-      await axios.put(`http://localhost:3000/comentarios_local/invalidar/${idComentario}`);
+      await axios.put(`https://pint-backend-5gz8.onrender.com/comentarios_local/invalidar/${idComentario}`);
       setComentarios(prevComentarios => prevComentarios.filter(comentario => comentario.ID_COMENTARIO !== idComentario));
     } catch (error) {
       console.error('Erro ao apagar comentário:', error);
@@ -212,7 +212,7 @@ const DetalhesLocal = () => {
       <div className="card shadow-lg p-3 mb-5 bg-white rounded">
         {local.foto && (
           <img
-            src={`http://localhost:3000/${local.foto}`}
+            src={`https://pint-backend-5gz8.onrender.com/${local.foto}`}
             className="card-img-top img-local-detalhes"
             alt={local.DESIGNACAO_LOCAL}
           />

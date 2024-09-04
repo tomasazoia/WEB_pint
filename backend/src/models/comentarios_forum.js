@@ -27,6 +27,11 @@ const ComentariosForum = sequelize.define('comentariosforum', {
         allowNull: false,
         defaultValue: Sequelize.NOW
     },
+    VALIDAR: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
     ID_FUNCIONARIO: {
         type: Sequelize.INTEGER,
         allowNull: false,

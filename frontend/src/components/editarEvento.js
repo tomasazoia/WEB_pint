@@ -40,7 +40,7 @@ const EditarEvento = () => {
     useEffect(() => {
         const fetchEvento = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/evento/get/${id}`);
+                const response = await axios.get(`https://pint-backend-5gz8.onrender.com/evento/get/${id}`);
                 setEvento(response.data);
             } catch (error) {
                 console.error('Erro ao carregar dados do evento:', error);
@@ -50,7 +50,7 @@ const EditarEvento = () => {
 
         const fetchAreas = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/area/list');
+                const response = await axios.get('https://pint-backend-5gz8.onrender.com/area/list');
                 setAreas(response.data);
             } catch (error) {
                 console.error('Erro ao carregar áreas:', error);
@@ -60,7 +60,7 @@ const EditarEvento = () => {
 
         const fetchCentros = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/centro/list');
+                const response = await axios.get('https://pint-backend-5gz8.onrender.com/centro/list');
                 setCentros(response.data);
             } catch (error) {
                 console.error('Erro ao carregar centros:', error);
@@ -114,7 +114,7 @@ const EditarEvento = () => {
         const fetchSubAreas = async () => {
             if (evento.ID_AREA) {
                 try {
-                    const response = await axios.get(`http://localhost:3000/subarea/list/${evento.ID_AREA}`);
+                    const response = await axios.get(`https://pint-backend-5gz8.onrender.com/subarea/list/${evento.ID_AREA}`);
                     setSubAreas(response.data);
                 } catch (error) {
                     console.error('Erro ao carregar subáreas:', error);
@@ -184,7 +184,7 @@ const EditarEvento = () => {
         }
 
         try {
-            await axios.put(`http://localhost:3000/evento/update/${id}`, formData, {
+            await axios.put(`https://pint-backend-5gz8.onrender.com/evento/update/${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

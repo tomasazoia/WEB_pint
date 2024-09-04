@@ -18,7 +18,7 @@ const ListarEventos = () => {
             const token = sessionStorage.getItem('token');
             if (!token) throw new Error('Token de autenticação não encontrado.');
 
-            const userProfileResponse = await axios.get('http://localhost:3000/user/profile', {
+            const userProfileResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
                 headers: {
                     'x-auth-token': token
                 }
@@ -27,7 +27,7 @@ const ListarEventos = () => {
             const userId = userProfileResponse.data.ID_FUNCIONARIO;
             if (!userId) throw new Error('Erro ao obter dados do usuário.');
 
-            const response = await axios.get(`http://localhost:3000/evento/listdisp/${userId}`);
+            const response = await axios.get(`https://pint-backend-5gz8.onrender.com/evento/listdisp/${userId}`);
             
             const eventosComCidades = await Promise.all(
                 response.data.map(async (evento) => {
@@ -77,7 +77,7 @@ const ListarEventos = () => {
                             <Link to={`/evento/get/${evento.ID_EVENTO}`}>
                                 {evento.foto && (
                                     <img
-                                        src={`http://localhost:3000/${evento.foto}`}
+                                        src={`https://pint-backend-5gz8.onrender.com/${evento.foto}`}
                                         className="card-img-top img-evento"
                                         alt={evento.NOME_EVENTO}
                                     />

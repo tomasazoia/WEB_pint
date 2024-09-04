@@ -11,7 +11,7 @@ const FormulariosTable = () => {
 
     const fetchFormularios = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/formularios/list');
+            const response = await axios.get('https://pint-backend-5gz8.onrender.com/formularios/list');
             const sortedFormularios = response.data.sort((a, b) => a.ID_FORMULARIO - b.ID_FORMULARIO);
             setFormularios(response.data);
         } catch (error) {
@@ -22,9 +22,9 @@ const FormulariosTable = () => {
     const toggleFormularioAtivo = async (id, currentStatus) => {
         try {
             if (currentStatus) {
-                await axios.put(`http://localhost:3000/formularios/deactivate/${id}`);
+                await axios.put(`https://pint-backend-5gz8.onrender.com/formularios/deactivate/${id}`);
             } else {
-                await axios.put(`http://localhost:3000/formularios/activate/${id}`);
+                await axios.put(`https://pint-backend-5gz8.onrender.com/formularios/activate/${id}`);
             }
             fetchFormularios(); // Atualiza a lista após a ativação/desativação
         } catch (error) {

@@ -166,8 +166,12 @@ const listLocaisByUserCentroInvalid = async (req, res) => {
         {
           model: Area,
           attributes: ['NOME_AREA']
-        }
-      ]
+        },
+        {
+          model: subarea,
+          as: 'sub_area',
+          attributes: ['ID_SUB_AREA', 'NOME_SUBAREA']
+        }]
     });
 
     // Adicionar a URL da foto para cada local

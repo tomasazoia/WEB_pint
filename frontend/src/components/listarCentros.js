@@ -15,7 +15,7 @@ const ListarCentros = () => {
 
   const loadCentros = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/centro/list');
+      const response = await axios.get('https://pint-backend-5gz8.onrender.com/centro/list');
       setCentros(response.data);
     } catch (error) {
       console.error('Erro ao buscar centros:', error);
@@ -36,7 +36,7 @@ const ListarCentros = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            await axios.delete(`http://localhost:3000/centro/delete/${id}`);
+            await axios.delete(`https://pint-backend-5gz8.onrender.com/centro/delete/${id}`);
             setCentros(centros.filter(centro => centro.ID_CENTRO !== id));
             Swal.fire(
               'Eliminado!',

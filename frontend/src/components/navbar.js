@@ -22,11 +22,11 @@ const Navbar = () => {
     const fetchAreasAndSubareas = async () => {
       try {
         // Faz o pedido para buscar as áreas
-        const areasResponse = await axios.get('http://localhost:3000/area/list');
+        const areasResponse = await axios.get('https://pint-backend-5gz8.onrender.com/area/list');
         setAreas(areasResponse.data);
 
         // Faz o pedido para buscar as subáreas
-        const subareasResponse = await axios.get('http://localhost:3000/subarea/list');
+        const subareasResponse = await axios.get('https://pint-backend-5gz8.onrender.com/subarea/list');
         setSubAreas(subareasResponse.data);
       } catch (error) {
         console.error('Erro ao buscar áreas e subáreas:', error);
@@ -94,6 +94,7 @@ const Navbar = () => {
                 <ul class="dropdown-menu" aria-labelledby="comDropdown">
                   <li><a class="dropdown-item" href="/comentariosinv">Eventos</a></li>
                   <li><a class="dropdown-item" href="/comentariosinvlocal">Locais</a></li>
+                  <li><a class="dropdown-item" href="/validarcomfor">Foruns</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">

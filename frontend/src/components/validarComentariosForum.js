@@ -3,7 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Swal from 'sweetalert2';
 
-const ComentariosNaoValidados = () => {
+const ComentariosNaoValidadosForum = () => {
     const [comentarios, setComentarios] = useState([]);
     const [error, setError] = useState('');
 
@@ -13,7 +13,7 @@ const ComentariosNaoValidados = () => {
 
     const fetchComentarios = async () => {
         try {
-            const comentariosResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/comentarios_local/listlocalinvalido`);
+            const comentariosResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/comentarios_forum/listforuminvalido`);
             setComentarios(comentariosResponse.data);
         } catch (error) {
             console.error('Erro ao listar comentários não validados:', error);
@@ -23,7 +23,7 @@ const ComentariosNaoValidados = () => {
 
     const deleteComentario = async (id) => {
         try {
-            await axios.delete(`https://pint-backend-5gz8.onrender.com/comentarios_local/delete/${id}`, {
+            await axios.delete(`https://pint-backend-5gz8.onrender.com/comentarios_forum/delete/${id}`, {
                 headers: {
                     'x-auth-token': sessionStorage.getItem('token')
                 }
@@ -61,7 +61,7 @@ const ComentariosNaoValidados = () => {
 
     const validarComentario = async (comentarioId) => {
         try {
-            await axios.put(`https://pint-backend-5gz8.onrender.com/comentarios_local/validar/${comentarioId}`);
+            await axios.put(`https://pint-backend-5gz8.onrender.com/comentarios_forum/validar/${comentarioId}`);
             Swal.fire({
                 icon: 'success',
                 title: 'Validado!',
@@ -88,7 +88,7 @@ const ComentariosNaoValidados = () => {
 
     return (
         <div className="container mt-4">
-            <h1 className="mb-4">Comentários Não Validados - Locais</h1>
+            <h1 className="mb-4">Comentários Não Validados - Fóruns</h1>
             {error && <div className="alert alert-danger">{error}</div>}
             <div className="table-responsive">
                 <table className="table table-striped">
@@ -97,7 +97,7 @@ const ComentariosNaoValidados = () => {
                             <th>ID</th>
                             <th>Comentário</th>
                             <th>Data</th>
-                            <th>Nome da Recomendação</th>  {/* Novo campo para o número do evento */}
+                            <th>Nome do Fórum</th> {/* Novo campo para o título do fórum */}
                             <th>Ação</th>
                         </tr>
                     </thead>
@@ -107,8 +107,7 @@ const ComentariosNaoValidados = () => {
                                 <td>{comentario.ID_COMENTARIO}</td>
                                 <td>{comentario.DESCRICAO}</td>
                                 <td>{formatarData(comentario.DATA_COMENTARIO)}</td>
-                                <td>{comentario.local.DESIGNACAO_LOCAL}</td>  {/* Exibe o número do evento */}
-                                {/*<td>{comentario.evento.NOME_EVENTO}</td>*/}  
+                                <td>{comentario.forum.NOME_FORUM}</td> {/* Exibe o título do fórum */}
                                 <td>
                                     <button
                                         className="btn btn-primary"
@@ -133,4 +132,4 @@ const ComentariosNaoValidados = () => {
     );
 };
 
-export default ComentariosNaoValidados;
+export default ComentariosNaoValidadosForum;
