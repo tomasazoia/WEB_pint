@@ -15,6 +15,15 @@ const Notificacoes = require('../models/notificacoes');
 const userPreferences = require('../models/userPreferences');
 const Sequelize = require('sequelize');
 
+const serviceKey = path.join(__dirname, 'C:', 'astute-nuance-434614-f3-76edd1642656.json');
+
+const storage = new Storage({
+  keyFilename: serviceKey,
+  projectId: 'astute-nuance-434614-f3',
+});
+
+const bucket = storage.bucket('pint-bucket');
+
 const listEventosByUserCentro = async (req, res) => {
   const { userId } = req.params; // Assumindo que o ID do usuário seja passado como parâmetro
 
@@ -103,8 +112,28 @@ const createEvento = async (req, res) => {
       return res.status(404).json({ error: 'Centro associado ao utilizador não encontrado' });
     }
 
-    const foto = req.file ? req.file.path : null; // Verifica se existe um arquivo de foto
+    let fotoUrl = null; // Inicializa a variável da URL da foto
 
+    // Verifica se existe um arquivo de foto e faz o upload para o Google Cloud Storage
+    if (req.file) {
+      const blob = bucket.file(req.file.originalname);
+      const blobStream = blob.createWriteStream({ resumable: false });
+
+      blobStream.on('error', (err) => {
+        console.error('Erro no upload da foto:', err);
+        return res.status(500).json({ error: 'Erro no upload da foto' });
+      });
+
+      await new Promise((resolve, reject) => {
+        blobStream.on('finish', () => {
+          fotoUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+          resolve();
+        });
+        blobStream.end(req.file.buffer);
+      });
+    }
+
+    // Cria o evento no banco de dados com a URL da foto, se existir
     const novoEvento = await Eventos.create({
       ID_CENTRO,  // Centro obtido automaticamente do utilizador
       ID_CRIADOR,
@@ -117,7 +146,7 @@ const createEvento = async (req, res) => {
       ID_SUB_AREA: ID_SUB_AREA || null, // Certifica-se de que será null se não estiver definido
       N_PARTICIPANTES,
       ID_APROVADOR,
-      foto
+      foto: fotoUrl, // Salva a URL da foto no evento
     });
 
     // Buscar utilizadores que tenham a área ou subárea nas preferências
@@ -125,7 +154,7 @@ const createEvento = async (req, res) => {
       where: {
         [Sequelize.Op.or]: [
           { ID_AREA },
-          { ID_SUBAREA: ID_SUB_AREA || null}
+          { ID_SUBAREA: ID_SUB_AREA || null }
         ]
       },
       include: [{
