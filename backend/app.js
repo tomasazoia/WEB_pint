@@ -59,7 +59,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: true }));
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-const serviceKey = path.join(__dirname, 'C:\astute-nuance-434614-f3-76edd1642656.json');
+
+const serviceKey = path.join(__dirname, 'C:', 'astute-nuance-434614-f3-76edd1642656.json');
 
 const storage = new Storage({
   keyFilename: serviceKey,
@@ -178,6 +179,7 @@ app.post('/upload', upload.single('foto'), (req, res) => {
   }
 
   const blob = bucket.file(req.file.originalname);
+  
   const blobStream = blob.createWriteStream({
       resumable: false,
   });
