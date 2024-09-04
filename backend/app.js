@@ -7,8 +7,6 @@ const { SESSION_SECRET, PORT } = require('./src/config');
 const sequelize = require('./src/models/database');
 const multer = require('multer');
 const path = require('path');
-const AWS = require('aws-sdk');
-const multerS3 = require('multer-s3');
 
 const loginRoutes = require('./src/routes/loginRoute');
 const centroRoutes = require('./src/routes/centroRoute');
@@ -33,6 +31,7 @@ const comentarioLocal = require('./src/routes/comentarios_localRoute');
 const notificacoes = require('./src/routes/notificacoesRoute');
 const formularios = require('./src/routes/formulariosRoute');
 const infos = require('./src/routes/infosEAvisosRoute');
+
 const AlbumFotos = require('./src/models/albumFotos');
 const Area = require('./src/models/area');
 const AreaLocal = require('./src/models/areaLocal');
@@ -52,35 +51,26 @@ const reportEventos = require('./src/models/reportEventos');
 const reportLocais = require('./src/models/reportLocais');
 const reportForums = require('./src/models/reportForums');
 
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Substitua pelo seu ACCESS_KEY_ID
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, // Substitua pelo seu SECRET_ACCESS_KEY
-  region: process.env.AWS_REGION // Substitua pela região do seu bucket
-});
-
-const s3 = new AWS.S3();
-
-const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: process.env.AWS_S3_BUCKET_NAME, // Nome do seu bucket no S3
-    acl: 'public-read', // Controle de acesso (pode ser 'private', 'public-read', etc.)
-    metadata: (req, file, cb) => {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const ext = path.extname(file.originalname);
-      cb(null, 'uploads/' + file.fieldname + '-' + uniqueSuffix + ext);
-    }
-  })
-});
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
+app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: true }));
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); 
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 const predefinedAreas = [
   { NOME_AREA: 'Gastronomia' },
@@ -182,11 +172,11 @@ const syncDatabase = async () => {
 
 app.post('/upload', upload.single('foto'), (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
+      return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
   }
-  // O arquivo agora está armazenado no S3, e a URL de acesso estará em req.file.location
-  res.json({ message: 'Arquivo recebido com sucesso', fileUrl: req.file.location });
-});
+  console.log(req.file); 
+  res.send('Arquivo recebido com sucesso');
+})
 
 app.use('/auth', loginRoutes);
 app.use('/centro', centroRoutes);
