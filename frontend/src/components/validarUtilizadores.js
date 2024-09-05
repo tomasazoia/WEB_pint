@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const UsersNaoValidados = () => {
   const [users, setUsers] = useState([]);
-    const [error, setError] = useState('');
+  const [error, setError] = useState('');
 
 
   useEffect(() => {
@@ -54,6 +54,29 @@ const UsersNaoValidados = () => {
     }
   };
 
+  const handleDelete = (userId) => {
+    const token = sessionStorage.getItem('token');
+
+    if (!token) {
+      setError('Token de autenticação não encontrado.');
+      return;
+    }
+
+    axios.put(`https://pintfinal-backend.onrender.com/user/delete/${userId}`, {}, {
+      headers: {
+        'x-auth-token': token
+      }
+    })
+      .then(response => {
+        // Atualiza a lista de utilizadores filtrando o que foi excluído
+        setUsers(users.filter(user => user.ID_FUNCIONARIO !== userId));
+      })
+      .catch(error => {
+        setError('Erro ao eliminar o utilizador.');
+        console.error('Erro ao eliminar o utilizador:', error);
+      });
+  };
+
   return (
     <div className="container mt-4">
       <h1 className="mb-4">Utilizadores Não Validados</h1>
@@ -74,11 +97,14 @@ const UsersNaoValidados = () => {
                 <td>{user.user_name}</td>
                 <td>{user.user_mail}</td>
                 <td>
-                  <button 
-                    className="btn btn-primary" 
+                  <button
+                    className="btn btn-primary"
                     onClick={() => validarUser(user.ID_FUNCIONARIO)}
                   >
                     Validar
+                  </button>
+                  <button className="btn btn-danger mr-2" onClick={() => handleDelete(user.ID_FUNCIONARIO)}>
+                    <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </td>
               </tr>

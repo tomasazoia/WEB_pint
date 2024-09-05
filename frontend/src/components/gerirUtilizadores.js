@@ -48,7 +48,7 @@ const Utilizadores = () => {
     }
   };
   
-  const handleDelete = (userId) => {
+  const handleInvalidar = (userId) => {
     const token = sessionStorage.getItem('token');
     
     if (!token) {
@@ -128,7 +128,7 @@ const Utilizadores = () => {
               <p><FontAwesomeIcon icon={faPhone} /> <strong>Telefone:</strong> {user.NTELEMOVEL}</p>
             </div>
             <div>
-              <button className="btn btn-danger mr-2" onClick={() => handleDelete(user.ID_FUNCIONARIO)}>
+              <button className="btn btn-danger mr-2" onClick={() => handleInvalidar(user.ID_FUNCIONARIO)}>
                 <FontAwesomeIcon icon={faTrash} /> Invalidar
               </button>
               <button 
