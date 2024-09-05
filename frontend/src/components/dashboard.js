@@ -247,6 +247,14 @@ const Dashboard = () => {
           </a>
         </div>
         <div className="col-md-3">
+          <a href="/reportLocais" className="card shadow-sm text-decoration-none">
+            <div className="card-body text-center">
+              <h5 className="card-title">Validar Comentários</h5>
+              <p className="card-text">Foruns</p>
+            </div>
+          </a>
+        </div>
+        <div className="col-md-3">
           <a href="/reportEventos" className="card shadow-sm text-decoration-none">
             <div className="card-body text-center">
               <h5 className="card-title">Reports em Comentários</h5>
@@ -259,6 +267,14 @@ const Dashboard = () => {
             <div className="card-body text-center">
               <h5 className="card-title">Reports em Comentários</h5>
               <p className="card-text">Locais</p>
+            </div>
+          </a>
+        </div>
+        <div className="col-md-3">
+          <a href="/reportLocais" className="card shadow-sm text-decoration-none">
+            <div className="card-body text-center">
+              <h5 className="card-title">Reports em Comentários</h5>
+              <p className="card-text">Foruns</p>
             </div>
           </a>
         </div>

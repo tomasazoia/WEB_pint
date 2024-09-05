@@ -14,7 +14,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // Novo estado para controlar a visibilidade da senha
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post('https://pintfinal-backend.onrender.com/auth/login', {
+      const response = await axios.post('http://localhost:3000/auth/login', {
         user_mail: email,
         user_password: password,
       });
@@ -72,7 +72,16 @@ const Login = () => {
         });
       }
     } catch (error) {
-      Swal.fire('Erro', 'Erro ao fazer login.', 'error');
+      const errorMessage = error.response?.data?.message || 'Erro ao fazer login.';
+      if (errorMessage === 'Senha incorreta.') {
+        Swal.fire('Erro', 'Senha incorreta.', 'error');
+      } else if (errorMessage === 'Acesso restrito a administradores.') {
+        Swal.fire('Erro', 'Acesso restrito a administradores.', 'error');
+      } else if (errorMessage === 'Utilizador não encontrado.') {
+        Swal.fire('Erro', 'Utilizador não encontrado.', 'error');
+      } else {
+        Swal.fire('Erro', errorMessage, 'error');
+      }
     }
   };
 
@@ -80,7 +89,7 @@ const Login = () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      const response = await axios.post('https://pintfinal-backend.onrender.com/auth/google-login', {
+      const response = await axios.post('http://localhost:3000/auth/google-login', {
         user_mail: result.user.email,
         user_name: result.user.displayName,
         user_photo: result.user.photoURL,
@@ -108,7 +117,7 @@ const Login = () => {
     const provider = new FacebookAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      const response = await axios.post('https://pintfinal-backend.onrender.com/auth/facebook-login', {
+      const response = await axios.post('http://localhost:3000/auth/facebook-login', {
         user_mail: result.user.email,
         user_name: result.user.displayName,
         user_photo: result.user.photoURL,
