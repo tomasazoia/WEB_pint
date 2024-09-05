@@ -1,7 +1,7 @@
 const User = require('../models/users');
 const Centro = require('../models/centro');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt'); // Adicionando bcrypt para criptografar a nova senha
+const bcrypt = require('bcrypt'); // Adicionando bcrypt para criptografar a nova palavra-passe
 const { Sequelize } = require('sequelize');
 const Forum = require('../models/forum');
 const ComentariosForum = require('../models/comentarios_forum');
@@ -297,7 +297,7 @@ const invalidarUser = async (req, res) => {
   }
 };
 
-// Função para alterar a senha do utilizador
+// Função para alterar a palavra-passe do utilizador
 const changePassword = async (req, res) => {
   try {
     const token = req.header('x-auth-token');
@@ -319,7 +319,7 @@ const changePassword = async (req, res) => {
     const isMatch = await bcrypt.compare(oldPassword, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: 'Senha antiga incorreta.' });
+      return res.status(400).json({ message: 'palavra-passe antiga incorreta.' });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -327,10 +327,10 @@ const changePassword = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: 'Senha alterada com sucesso.' });
+    res.status(200).json({ message: 'palavra-passe alterada com sucesso.' });
   } catch (error) {
-    console.error('Erro ao alterar a senha do utilizador:', error);
-    res.status(500).json({ message: 'Erro ao alterar a senha do utilizador.', error: error.message });
+    console.error('Erro ao alterar a palavra-passe do utilizador:', error);
+    res.status(500).json({ message: 'Erro ao alterar a palavra-passe do utilizador.', error: error.message });
   }
 };
 
@@ -432,18 +432,23 @@ const despromoverParaAdministrador = async (req, res) => {
   }
 };
 
+const deleteUser1 = async (req, res) => {
+  const { id } = req.params;
 
+  try {
 
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User não encontrado' });
+    }
 
-
-
-
-
-
-
-
-
-
+    await user.destroy();
+    res.status(200).json({ message: 'utilizador deletado com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao deletar o utilizador:', error);
+    res.status(500).json({ message: 'Erro ao deletar o utilizador.', error: error.message });
+  }
+};
 
 module.exports = {
   listarUsers,
@@ -459,5 +464,6 @@ module.exports = {
   updateUserCentro,
   invalidarUser,
   promoverParaAdministrador,
-  despromoverParaAdministrador
+  despromoverParaAdministrador,
+  deleteUser1
 };

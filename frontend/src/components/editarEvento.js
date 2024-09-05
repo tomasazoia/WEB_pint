@@ -235,7 +235,7 @@ const EditarEvento = () => {
                 <div className="form-group p-2">
                     <label>Data do Evento:</label>
                     <input
-                        type="date"
+                        type="datetime-local"
                         className="form-control"
                         name="DATA_EVENTO"
                         value={evento.DATA_EVENTO}

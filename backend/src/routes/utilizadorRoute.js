@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { listarUsers, listarUsersValidados, listarUsersNaoValidados, getLoggedUser, updateUser, deleteUser, listarUsersPorCentro,listarUsersByStartDate, getUserById, validarUser,updateUserCentro, invalidarUser, promoverParaAdministrador, despromoverParaAdministrador } = require('../controllers/utilizadorController');
+const { listarUsers, listarUsersValidados, listarUsersNaoValidados, getLoggedUser, updateUser, deleteUser, listarUsersPorCentro,listarUsersByStartDate, getUserById, validarUser,updateUserCentro, invalidarUser, promoverParaAdministrador, despromoverParaAdministrador, deleteUser1 } = require('../controllers/utilizadorController');
 
 router.get('/list', listarUsers);
 router.get('/listvalidados/:userId', listarUsersValidados);
@@ -16,5 +16,6 @@ router.put('/invalidar/:id', invalidarUser);
 router.put('/admin/:id', promoverParaAdministrador);
 router.put('/updateCentro', updateUserCentro);
 router.put('/unadmin/:id', despromoverParaAdministrador);
+router.delete('/delete1/:id', deleteUser1);
 
 module.exports = router;
