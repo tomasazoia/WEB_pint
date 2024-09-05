@@ -6,9 +6,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min'; // Inclui tanto o Popper quanto o Bootstrap JavaScript
 
 import PaginaListarCentros from "./routes/PaginaListarCentros";
-import PaginaListarEventos from "./routes/PaginaListarEventos";
+import PaginaListarEventos from "./routes/PaginaListarEventos"; 
 import PaginaCriarEvento from "./routes/PaginaCriarEvento";
-import PaginaGerirEventos from "./routes/PaginaGerirEventos";
+import PaginaGerirEventos from "./routes/PaginaGerirEventos"; 
 import PaginaDetalheEvento from "./routes/PaginaDetalheEvento";
 import PaginaListarLocais from "./routes/PaginaListarLocais";
 import PaginaDetalheLocal from "./routes/PaginaDetalheLocal";
@@ -139,15 +139,15 @@ function App() {
             }
           />
           <Route path="/locais/listsubarea/:subAreaId" component={LocaisPorSubArea} element={
-            <PrivateRoute>
-              <PaginaLocaisPorSubArea />
-            </PrivateRoute>
-          } />
-          <Route path="/locais/listarea/:areaid" component={LocaisArea} element={
-            <PrivateRoute>
-              <PaginaLocaisPorAreaa />
-            </PrivateRoute>
-          } />
+              <PrivateRoute>
+                <PaginaLocaisPorSubArea />
+              </PrivateRoute>
+            }/>
+            <Route path="/locais/listarea/:areaid" component={LocaisArea} element={
+              <PrivateRoute>
+                <PaginaLocaisPorAreaa />
+              </PrivateRoute>
+            }/>
           <Route
             path="/area/create"
             element={
@@ -304,7 +304,7 @@ function App() {
             path="/auth/change-password"
             element={
               <PrivateRoute>
-                <PaginaReset />
+                <PaginaReset/>
               </PrivateRoute>
             }
           />
@@ -312,7 +312,7 @@ function App() {
             path="/auth/primeiro-login"
             element={
               <PrivateRoute>
-                <PaginaPrimeiro />
+                <PaginaPrimeiro/>
               </PrivateRoute>
             }
           />
@@ -320,7 +320,7 @@ function App() {
             path="/auth/register-google"
             element={
               <PrivateRoute>
-                <PaginaRegisterGoogle />
+                <PaginaRegisterGoogle/>
               </PrivateRoute>
             }
           />

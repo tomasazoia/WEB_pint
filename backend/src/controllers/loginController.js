@@ -312,6 +312,11 @@ const loginMobile = async (req, res) => {
       return res.status(400).json({ message: 'Utilizador não encontrado.' });
     }
 
+    // Check if the user is validated by an administrator
+    if (!user.VALIDAR) {
+      return res.status(403).json({ message: 'Utilizador não validado por um administrador.' });
+    }
+
     const isPasswordValid = await bcrypt.compare(user_password, user.user_password);
 
     if (!isPasswordValid) {
@@ -507,20 +512,34 @@ const facebookLogin = async (req, res) => {
         user_mail,
         user_password: null,
         email_confirmed: true,
-        reset_password: true,  // Defina como true para identificar o primeiro login
+        reset_password: true,  // Indica que é o primeiro login e precisa redefinir a senha
+        NIF: '000000000', // Defina um NIF padrão ou inválido, caso necessário
+        DATAINICIO: new Date(), // Data atual como valor padrão para DATAINICIO
+        MORADA: 'Endereço não fornecido', // Valor padrão para MORADA
+        NTELEMOVEL: '000000000', // Número de telefone padrão ou inválido
+        ADMINISTRADOR: false, // Valor padrão para ADMINISTRADOR
+        VALIDAR: false, // Valor padrão para VALIDAR
+        ID_CENTRO: null,  // Valor padrão para ID_CENTRO
       });
       firstLogin = true;
-    } else {
-      // Se o utilizador já existe, verifique se é o primeiro login
-      if (user.reset_password) {
-        firstLogin = true;
-        // Atualize o campo reset_password para false após o primeiro login
-        await User.update({ reset_password: false }, { where: { user_id: user.user_id } });
-      }
+
+      // Enviar o e-mail de boas-vindas apenas para novos utilizadores
+      await sendWelcomeEmail(user_mail, user_name);
+    } else if (user.reset_password) {
+      // Se o usuário já existe e reset_password é true, é o primeiro login
+      firstLogin = true;
+
+      // Atualizar o campo reset_password para false após o primeiro login
+      await User.update({ reset_password: false }, { where: { user_id: user.user_id } });
+
+      // Opcional: recarregar o usuário para garantir que temos a versão atualizada
+      user = await User.findOne({ where: { user_mail } });
     }
 
+    // Gerar o token JWT
     const token = jwt.sign({ user_id: user.user_id, user_mail: user.user_mail }, SECRET_KEY, { expiresIn: '1h' });
 
+    // Retornar a resposta com o token e a flag firstLogin
     res.status(200).json({ message: 'Login com Facebook bem-sucedido.', token, firstLogin });
   } catch (error) {
     console.error('Erro ao fazer login com Facebook:', error);

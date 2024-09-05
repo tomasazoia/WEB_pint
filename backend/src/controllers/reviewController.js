@@ -166,7 +166,7 @@ exports.addReviewToLocal = async (req, res) => {
     }
 };
 
-
+//contar as reviews de um local
 exports.getReviewsByLocal = async (req, res) => {
     const { id } = req.params;
     try {

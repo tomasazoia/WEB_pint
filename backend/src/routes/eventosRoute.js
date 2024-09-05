@@ -21,4 +21,5 @@ router.get('/subarea/:subAreaId/user/:userId', eventoRoute.listEventosBySubArea)
 router.get('/eventos-by-area', eventoRoute.eventos_por_area);
 router.put('/invalidate/:id', eventoRoute.invalidateEvento);
 
+
 module.exports = router;

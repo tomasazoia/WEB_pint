@@ -43,7 +43,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', {
+      const response = await axios.post('https://pintfinal-backend.onrender.com/auth/login', {
         user_mail: email,
         user_password: password,
       });
@@ -89,7 +89,7 @@ const Login = () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      const response = await axios.post('http://localhost:3000/auth/google-login', {
+      const response = await axios.post('https://pintfinal-backend.onrender.com/auth/google-login', {
         user_mail: result.user.email,
         user_name: result.user.displayName,
         user_photo: result.user.photoURL,
@@ -117,7 +117,7 @@ const Login = () => {
     const provider = new FacebookAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      const response = await axios.post('http://localhost:3000/auth/facebook-login', {
+      const response = await axios.post('https://pintfinal-backend.onrender.com/auth/facebook-login', {
         user_mail: result.user.email,
         user_name: result.user.displayName,
         user_photo: result.user.photoURL,

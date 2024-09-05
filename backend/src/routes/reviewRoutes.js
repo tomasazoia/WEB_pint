@@ -14,6 +14,7 @@ router.post('/local/:ID_LOCAL', reviewController.addReviewToLocal);
 router.get('/get/local/:id', reviewController.getReviewById);
 router.get('/local/get/:id', reviewController.getReviewsByLocal);
 router.get('/average/local/:id', reviewController.getAverageReviewByLocal);
+router.get('/localreviews/:id', reviewController._getReviewsByLocal);
 
 
 module.exports = router;

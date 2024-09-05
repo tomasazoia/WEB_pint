@@ -67,12 +67,12 @@ const ChangePassword = () => {
       <div className="card shadow-lg p-4 mb-5 bg-white rounded">
         <div className="card-header bg-primary text-white text-center">
           <FontAwesomeIcon icon={faLock} size="3x" />
-          <h2 className="mt-3 text-white">Mudar Senha</h2>
+          <h2 className="mt-3 text-white">Criar Senha</h2>
         </div>
         <div className="card-body">
           <form onSubmit={handleChangePassword}>
             <div className="mb-3">
-              <label htmlFor="oldPassword" className="form-label"><FontAwesomeIcon icon={faLock} /> Senha Antiga:</label>
+              <label htmlFor="oldPassword" className="form-label"><FontAwesomeIcon icon={faLock} /> Senha Temporária:</label>
               <input
                 type="password"
                 id="oldPassword"
@@ -104,7 +104,7 @@ const ChangePassword = () => {
                 required
               />
             </div>
-            <button type="submit" className="btn btn-primary w-100 mb-3"><FontAwesomeIcon icon={faLock} /> Alterar Senha</button>
+            <button type="submit" className="btn btn-primary w-100 mb-3"><FontAwesomeIcon icon={faLock} /> Criar Senha</button>
           </form>
           {message && <div className="alert alert-success mt-3" role="alert">{message}</div>}
           {error && <div className="alert alert-danger mt-3" role="alert">{error}</div>}

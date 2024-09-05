@@ -230,16 +230,15 @@ const listEventosDispCentroCal = async (req, res) => {
         DISPONIBILIDADE: true
       }
     });
-
-    // Formatar as datas para ISO 8601
-    const eventosFormatados = eventos.map(evento => {
-      return {
-        ...evento.toJSON(),
-        DATA_EVENTO: new Date(evento.DATA_EVENTO).toISOString(), // Garantir formato ISO 8601
-      };
-    });
-
-    res.status(200).json(eventosFormatados);
+// Formatar as datas para ISO 8601
+const eventosFormatados = eventos.map(evento => {
+  return {
+    ...evento.toJSON(),
+    DATA_EVENTO: new Date(evento.DATA_EVENTO).toISOString(), // Garantir formato ISO 8601
+  };
+});
+    
+    res.status(200).json(eventos);
   } catch (error) {
     console.error('Erro ao listar eventos disponíveis no centro do utilizador:', error);
     res.status(500).json({ message: 'Erro ao listar eventos disponíveis no centro do utilizador.', error: error.message });
@@ -597,7 +596,6 @@ const listEventosBySubArea = async (req, res) => {
     return res.status(500).json({ error: 'Erro ao listar eventos por subárea.' });
   }
 };
-
 const eventos_por_area = async (req, res) => {
   try {
     const eventosCount = await Eventos.findAll({
@@ -619,7 +617,6 @@ const eventos_por_area = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
 const invalidateEvento = async (req, res) => {
   const { id } = req.params; // ID do local passado como parâmetro na URL
 
@@ -643,5 +640,4 @@ const invalidateEvento = async (req, res) => {
     res.status(500).json({ message: 'Erro ao validar evento.', error: error.message });
   }
 };
-
 module.exports = { listEventosByUserCentro, createEvento, listEventos, listEventosDispCentroCal, updateEvento, deleteEvento, eventoDetail, listEventosDisp, listEventosDispCentro, listEventosByArea, listarEventosCriador,listEventosBySubArea,eventos_por_area, invalidateEvento };
