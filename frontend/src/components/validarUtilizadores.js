@@ -64,7 +64,7 @@ const UsersNaoValidados = () => {
       return;
     }
 
-    axios.put(`https://pintfinal-backend.onrender.com/user/delete/${userId}`, {}, {
+    axios.delete(`https://pintfinal-backend.onrender.com/user/delete/${userId}`, {}, {
       headers: {
         'x-auth-token': token
       }
