@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { faUser, faEnvelope, faIdCard, faMapMarkerAlt, faPhone, faTrash, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const UsersNaoValidados = () => {
   const [users, setUsers] = useState([]);
