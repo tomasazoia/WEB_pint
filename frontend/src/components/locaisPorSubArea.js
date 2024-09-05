@@ -30,7 +30,24 @@ const LocaisPorSubArea = () => {
                 const userId = userResponse.data.ID_FUNCIONARIO;
                 
                 const response = await axios.get(`https://pintfinal-backend.onrender.com/locais/subarea/${subAreaId}/user/${userId}`);
-                setLocais(response.data);
+                
+                const locaisWithCityAndReview = await Promise.all(
+                    response.data.map(async (local) => {
+                        const city = await getCityFromCoordinates(local.LOCALIZACAO);
+
+                        // Buscando a média de reviews para cada local
+                        const averageReviewResponse = await axios.get(`https://pintfinal-backend.onrender.com/review/average/local/${local.ID_LOCAL}`);
+                        const averageReview = averageReviewResponse.data.averageReview || 0;
+
+                        // Buscando o total de reviews para cada local
+                        const totalReviewsResponse = await axios.get(`https://pintfinal-backend.onrender.com/review/local/get/${local.ID_LOCAL}`);
+                        const totalReviews = totalReviewsResponse.data.count || 0;  // Use o valor de 'count' corretamente
+
+                        return { ...local, cidade: city, averageReview, totalReviews }; // Armazene totalReviews no objeto 'local'
+                    })
+                );
+                
+                setLocais(locaisWithCityAndReview);
             } catch (error) {
                 console.error('Nenhuma recomendacao encontrada:', error);
                 setError('Nenhuma recomendacao encontrada.');
@@ -111,10 +128,11 @@ const LocaisPorSubArea = () => {
                             </Link>
                             <div className="card-body d-flex flex-column">
                                 <h5 className="card-title">{local.DESIGNACAO_LOCAL}</h5>
-                                <p className="card-text flex-grow-1">{local.LOCALIZACAO}</p>
-                                {local.REVIEW && (
+                                <p className="card-text flex-grow-1"><strong>Localização:</strong> {local.cidade || 'Cidade Desconhecida'}</p>
+                                {local.averageReview > 0 && (
                                     <p className="card-text">
-                                        <small className="text-muted">Avaliação: {renderStars(local.REVIEW)}</small>
+                                        <strong>Avaliação Média:</strong> {renderStars(local.averageReview)}
+                                        <span> ({local.totalReviews} avaliações)</span> {/* Use local.totalReviews aqui */}
                                     </p>
                                 )}
                                 {local.area && (

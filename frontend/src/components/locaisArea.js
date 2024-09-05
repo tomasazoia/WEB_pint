@@ -28,9 +28,26 @@ const LocaisArea = () => {
                     }
                 });
                 const userId = userResponse.data.ID_FUNCIONARIO;
-                
                 const response = await axios.get(`https://pintfinal-backend.onrender.com/locais/area/${areaid}/user/${userId}`);
-                setLocais(response.data);
+
+
+                const locaisWithCityAndReview = await Promise.all(
+                    response.data.map(async (local) => {
+                        const city = await getCityFromCoordinates(local.LOCALIZACAO);
+
+                        // Buscando a média de reviews para cada local
+                        const averageReviewResponse = await axios.get(`https://pintfinal-backend.onrender.com/review/average/local/${local.ID_LOCAL}`);
+                        const averageReview = averageReviewResponse.data.averageReview || 0;
+
+                        // Buscando o total de reviews para cada local
+                        const totalReviewsResponse = await axios.get(`https://pintfinal-backend.onrender.com/review/local/get/${local.ID_LOCAL}`);
+                        const totalReviews = totalReviewsResponse.data.count || 0;  // Use o valor de 'count' corretamente
+
+                        return { ...local, cidade: city, averageReview, totalReviews }; // Armazene totalReviews no objeto 'local'
+                    })
+                );
+
+                setLocais(locaisWithCityAndReview);
             } catch (error) {
                 console.error('Nenhuma recomendacao encontrada:', error);
                 setError('Nenhuma recomendacao encontrada.');
@@ -42,53 +59,53 @@ const LocaisArea = () => {
 
     const deleteLocal = async (id) => {
         try {
-          await axios.put(`https://pintfinal-backend.onrender.com/locais/invalidate/${id}`, {
-            headers: {
-              'x-auth-token': sessionStorage.getItem('token')  // Incluir o token na requisição de deleção
-            }
-          });
-          setLocais(locais.filter(local => local.ID_LOCAL !== id));
-          Swal.fire({
-            icon: 'success',
-            title: 'Invalidado!',
-            text: 'O local foi Invalidado com sucesso.'
-          });
+            await axios.put(`https://pintfinal-backend.onrender.com/locais/invalidate/${id}`, {
+                headers: {
+                    'x-auth-token': sessionStorage.getItem('token')  // Incluir o token na requisição de deleção
+                }
+            });
+            setLocais(locais.filter(local => local.ID_LOCAL !== id));
+            Swal.fire({
+                icon: 'success',
+                title: 'Invalidado!',
+                text: 'O local foi Invalidado com sucesso.'
+            });
         } catch (error) {
-          console.error('Erro ao Invalidar local:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: 'Ocorreu um erro ao Invalidar o local.'
-          });
+            console.error('Erro ao Invalidar local:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Ocorreu um erro ao Invalidar o local.'
+            });
         }
-      };
+    };
 
     const confirmDelete = (id) => {
         Swal.fire({
-          title: 'Tem a certeza?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Sim, eliminar!'
+            title: 'Tem a certeza?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, eliminar!'
         }).then((result) => {
-          if (result.isConfirmed) {
-            deleteLocal(id);
-          }
+            if (result.isConfirmed) {
+                deleteLocal(id);
+            }
         });
-      };
-    
+    };
+
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating);
         const halfStars = rating % 1 >= 0.5 ? 1 : 0;
         const emptyStars = 5 - fullStars - halfStars;
 
         return (
-          <>
-            {[...Array(fullStars)].map((_, i) => <FaStar key={`full-${i}`} color="gold" />)}
-            {[...Array(halfStars)].map((_, i) => <FaStarHalfAlt key={`half-${i}`} color="gold" />)}
-            {[...Array(emptyStars)].map((_, i) => <FaRegStar key={`empty-${i}`} color="gold" />)}
-          </>
+            <>
+                {[...Array(fullStars)].map((_, i) => <FaStar key={`full-${i}`} color="gold" />)}
+                {[...Array(halfStars)].map((_, i) => <FaStarHalfAlt key={`half-${i}`} color="gold" />)}
+                {[...Array(emptyStars)].map((_, i) => <FaRegStar key={`empty-${i}`} color="gold" />)}
+            </>
         );
     };
 
@@ -111,10 +128,11 @@ const LocaisArea = () => {
                             </Link>
                             <div className="card-body d-flex flex-column">
                                 <h5 className="card-title">{local.DESIGNACAO_LOCAL}</h5>
-                                <p className="card-text flex-grow-1">{local.LOCALIZACAO}</p>
-                                {local.REVIEW && (
+                                <p className="card-text flex-grow-1"><strong>Localização:</strong> {local.cidade || 'Cidade Desconhecida'}</p>
+                                {local.averageReview > 0 && (
                                     <p className="card-text">
-                                        <small className="text-muted">Avaliação: {renderStars(local.REVIEW)}</small>
+                                        <strong>Avaliação Média:</strong> {renderStars(local.averageReview)}
+                                        <span> ({local.totalReviews} avaliações)</span> {/* Use local.totalReviews aqui */}
                                     </p>
                                 )}
                                 {local.area && (
