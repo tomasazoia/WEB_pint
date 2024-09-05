@@ -25,7 +25,7 @@ const ListarLocais = () => {
     }
 
     try {
-      const userResponse = await axios.get('http://localhost:3000/user/profile', {
+      const userResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
         headers: {
           'x-auth-token': token
         }
@@ -40,7 +40,7 @@ const ListarLocais = () => {
       const userId = userResponse.data.ID_FUNCIONARIO;
       if (!userId) throw new Error('Erro ao obter dados do usuário ou centro.');
 
-      const locaisResponse = await axios.get(`http://localhost:3000/locais/user/${userId}/centro`, {
+      const locaisResponse = await axios.get(`https://pintfinal-backend.onrender.com/locais/user/${userId}/centro`, {
         headers: {
           'x-auth-token': token
         },
@@ -54,11 +54,11 @@ const ListarLocais = () => {
           const city = await getCityFromCoordinates(local.LOCALIZACAO);
 
           // Buscando a média de reviews para cada local
-          const averageReviewResponse = await axios.get(`http://localhost:3000/review/average/local/${local.ID_LOCAL}`);
+          const averageReviewResponse = await axios.get(`https://pintfinal-backend.onrender.com/review/average/local/${local.ID_LOCAL}`);
           const averageReview = averageReviewResponse.data.averageReview || 0;
 
           // Buscando o total de reviews para cada local
-          const totalReviewsResponse = await axios.get(`http://localhost:3000/review/local/get/${local.ID_LOCAL}`);
+          const totalReviewsResponse = await axios.get(`https://pintfinal-backend.onrender.com/review/local/get/${local.ID_LOCAL}`);
           const totalReviews = totalReviewsResponse.data.count || 0;  // Use o valor de 'count' corretamente
 
           return { ...local, cidade: city, averageReview, totalReviews }; // Armazene totalReviews no objeto 'local'
@@ -93,7 +93,7 @@ const ListarLocais = () => {
 
   const deleteLocal = async (id) => {
     try {
-      await axios.put(`http://localhost:3000/locais/invalidate/${id}`, {
+      await axios.put(`https://pintfinal-backend.onrender.com/locais/invalidate/${id}`, {
         headers: {
           'x-auth-token': sessionStorage.getItem('token')
         }
@@ -156,7 +156,7 @@ const ListarLocais = () => {
               <Link to={`/locais/get/${local.ID_LOCAL}`}>
                 {local.foto && (
                   <img
-                    src={`http://localhost:3000/${local.foto}`}
+                    src={`https://pintfinal-backend.onrender.com/${local.foto}`}
                     className="card-img-top img-fixa-locais-lista"
                     alt={local.DESIGNACAO_LOCAL}
                   />

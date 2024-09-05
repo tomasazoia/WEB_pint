@@ -27,7 +27,7 @@ const ListarEventosDoCentro = () => {
 
         try {
             // Obter o ID do utilizador autenticado
-            const userResponse = await axios.get('http://localhost:3000/user/profile', {
+            const userResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
                 headers: {
                     'x-auth-token': token
                 }
@@ -35,7 +35,7 @@ const ListarEventosDoCentro = () => {
             const userId = userResponse.data.ID_FUNCIONARIO;
 
             // Obter eventos do centro ao qual o utilizador pertence
-            const eventosResponse = await axios.get(`http://localhost:3000/evento/user/${userId}/centro`, {
+            const eventosResponse = await axios.get(`https://pintfinal-backend.onrender.com/evento/user/${userId}/centro`, {
                 headers: {
                     'x-auth-token': token
                 }
@@ -97,7 +97,7 @@ const ListarEventosDoCentro = () => {
                 formData.append('foto', currentEvento.foto);
             }
 
-            await axios.put(`http://localhost:3000/evento/update/${currentEvento.ID_EVENTO}`, formData, {
+            await axios.put(`https://pintfinal-backend.onrender.com/evento/update/${currentEvento.ID_EVENTO}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -126,7 +126,7 @@ const ListarEventosDoCentro = () => {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        await axios.delete(`http://localhost:3000/evento/delete/${id}`);
+                        await axios.delete(`https://pintfinal-backend.onrender.com/evento/delete/${id}`);
                         setEventos(eventos.filter(evento => evento.ID_EVENTO !== id));
                         Swal.fire(
                             'Eliminado!',

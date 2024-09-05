@@ -12,7 +12,7 @@ const EsqueciPass = () => {
 
   const handleRequestReset = async () => {
     try {
-      await axios.post('http://localhost:3000/auth/request-password-reset', { user_mail: email });
+      await axios.post('https://pintfinal-backend.onrender.com/auth/request-password-reset', { user_mail: email });
       Swal.fire('Sucesso', 'Código de recuperação enviado para o seu e-mail.', 'success');
       setStep(2);
     } catch (error) {
@@ -22,7 +22,7 @@ const EsqueciPass = () => {
 
   const handleConfirmCode = async () => {
     try {
-      await axios.post('http://localhost:3000/auth/confirm-reset-code', { user_mail: email, resetCode: code });
+      await axios.post('https://pintfinal-backend.onrender.com/auth/confirm-reset-code', { user_mail: email, resetCode: code });
       Swal.fire('Sucesso', 'Código validado com sucesso.', 'success');
       setStep(3);
     } catch (error) {
@@ -34,7 +34,7 @@ const EsqueciPass = () => {
 
   const handleResetPassword = async () => {
     try {
-      await axios.post('http://localhost:3000/auth/reset-password', { user_mail: email, new_password: newPassword });
+      await axios.post('https://pintfinal-backend.onrender.com/auth/reset-password', { user_mail: email, new_password: newPassword });
       Swal.fire('Sucesso', 'Senha redefinida com sucesso.', 'success').then(() => {
         navigate('/login'); // Redirecione para a página de login após o sucesso
       });

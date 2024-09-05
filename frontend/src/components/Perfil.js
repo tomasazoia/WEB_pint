@@ -34,7 +34,7 @@ const Perfil = () => {
       return;
     }
 
-    axios.get('http://localhost:3000/user/profile', {
+    axios.get('https://pintfinal-backend.onrender.com/user/profile', {
       headers: {
         'x-auth-token': token
       }
@@ -56,7 +56,7 @@ const Perfil = () => {
 
   const loadEventosCriados = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:3000/evento/criador/eventos/${userId}`, {
+      const response = await axios.get(`https://pintfinal-backend.onrender.com/evento/criador/eventos/${userId}`, {
         headers: {
           'x-auth-token': sessionStorage.getItem('token')
         }
@@ -76,7 +76,7 @@ const Perfil = () => {
 
   const loadEventosInscritos = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:3000/participantesevento/funcionario/${userId}/eventos`, {
+      const response = await axios.get(`https://pintfinal-backend.onrender.com/participantesevento/funcionario/${userId}/eventos`, {
         headers: {
           'x-auth-token': sessionStorage.getItem('token')
         }
@@ -112,7 +112,7 @@ const Perfil = () => {
   };
 
   const loadPreferencias = (userId) => {
-    axios.get(`http://localhost:3000/userpreferences/list/profile/${userId}`, {
+    axios.get(`https://pintfinal-backend.onrender.com/userpreferences/list/profile/${userId}`, {
       headers: {
         'x-auth-token': sessionStorage.getItem('token')
       }
@@ -133,7 +133,7 @@ const Perfil = () => {
   };
 
   const loadAreas = () => {
-    axios.get('http://localhost:3000/area/list', {
+    axios.get('https://pintfinal-backend.onrender.com/area/list', {
       headers: {
         'x-auth-token': sessionStorage.getItem('token')
       }
@@ -148,7 +148,7 @@ const Perfil = () => {
   };
 
   const loadSubAreas = () => {
-    axios.get('http://localhost:3000/subarea/list', {
+    axios.get('https://pintfinal-backend.onrender.com/subarea/list', {
       headers: {
         'x-auth-token': sessionStorage.getItem('token')
       }
@@ -170,7 +170,7 @@ const Perfil = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const token = sessionStorage.getItem('token');
-    axios.put('http://localhost:3000/user/profileup', formData, {
+    axios.put('https://pintfinal-backend.onrender.com/user/profileup', formData, {
       headers: {
         'x-auth-token': token
       }
@@ -208,7 +208,7 @@ const Perfil = () => {
     };
 
     try {
-      const response = await axios.put(`http://localhost:3000/userpreferences/update/user/${user.ID_FUNCIONARIO}`, updatedPreferences, {
+      const response = await axios.put(`https://pintfinal-backend.onrender.com/userpreferences/update/user/${user.ID_FUNCIONARIO}`, updatedPreferences, {
         headers: {
           'x-auth-token': token
         }
