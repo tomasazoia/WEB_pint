@@ -275,7 +275,7 @@ const Dashboard = () => {
           </a>
         </div>
         <div className="col-md-4 mx-auto">
-          <a href="/reportLocais" className="card shadow-sm text-decoration-none">
+          <a href="/reportForuns" className="card shadow-sm text-decoration-none">
             <div className="card-body text-center">
               <h5 className="card-title">Reports em Comentários</h5>
               <p className="card-text">Foruns</p>

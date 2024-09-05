@@ -42,6 +42,7 @@ import ReportEventos from "./routes/ReportsEventos";
 import ReportLocais from "./routes/ReportLocais";
 import EditarEvento from "./routes/EditarEvento";
 import ValidarComentariosForum from "./routes/ValidarComentariosForum";
+import ReportForuns from "./routes/ReportsForuns";
 
 const PrivateRoute = ({ children }) => {
   const token = sessionStorage.getItem('token'); // Alterado para sessionStorage
@@ -87,6 +88,14 @@ function App() {
             element={
               <PrivateRoute>
                 <ReportEventos />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/reportForuns"
+            element={
+              <PrivateRoute>
+                <ReportForuns />
               </PrivateRoute>
             }
           />
