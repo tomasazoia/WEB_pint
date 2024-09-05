@@ -7,7 +7,6 @@ const { SESSION_SECRET, PORT } = require('./src/config');
 const sequelize = require('./src/models/database');
 const multer = require('multer');
 const path = require('path');
-const { Storage } = require('@google-cloud/storage');
 
 const loginRoutes = require('./src/routes/loginRoute');
 const centroRoutes = require('./src/routes/centroRoute');
@@ -60,20 +59,18 @@ app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: true
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const serviceKey = path.join(__dirname, 'C:', 'astute-nuance-434614-f3-76edd1642656.json');
-
-const storage = new Storage({
-  keyFilename: serviceKey,
-  projectId: 'astute-nuance-434614-f3', // Substitua pelo ID do seu projeto
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); 
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    }
 });
 
-const bucket = storage.bucket('pint-bucket'); 
-
-const multerStorage = multer.memoryStorage();
-
-const upload = multer({
-  storage: multerStorage,
-});
+const upload = multer({ storage: storage });
 
 const predefinedAreas = [
   { NOME_AREA: 'Gastronomia' },
@@ -177,24 +174,9 @@ app.post('/upload', upload.single('foto'), (req, res) => {
   if (!req.file) {
       return res.status(400).json({ error: 'Nenhum arquivo enviado.' });
   }
-
-  const blob = bucket.file(req.file.originalname);
-  
-  const blobStream = blob.createWriteStream({
-      resumable: false,
-  });
-
-  blobStream.on('error', (err) => {
-      res.status(500).json({ error: err.message });
-  });
-
-  blobStream.on('finish', () => {
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-      res.status(200).json({ message: 'Upload bem-sucedido!', fileUrl: publicUrl });
-  });
-
-  blobStream.end(req.file.buffer);
-});
+  console.log(req.file); 
+  res.send('Arquivo recebido com sucesso');
+})
 
 app.use('/auth', loginRoutes);
 app.use('/centro', centroRoutes);

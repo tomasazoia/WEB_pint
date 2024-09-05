@@ -27,7 +27,7 @@ const ChangePassword = () => {
     try {
       const token = sessionStorage.getItem('token');
 
-      const response = await axios.post('https://pint-backend-5gz8.onrender.com/auth/change-password', {
+      const response = await axios.post('https://pintfinal-backend.onrender.com/auth/change-password', {
         oldPassword,
         newPassword
       }, {

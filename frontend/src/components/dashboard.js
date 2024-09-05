@@ -23,7 +23,7 @@ const Dashboard = () => {
     // Função para buscar os dados de locais por área
     const fetchLocalsData = async () => {
       try {
-        const response = await axios.get('https://pint-backend-5gz8.onrender.com/locais/locals-by-area');
+        const response = await axios.get('https://pintfinal-backend.onrender.com/locais/locals-by-area');
         const formattedData = [
           ['Área', 'Locais'],
           ...response.data.map(item => [item.area_name, parseInt(item.local_count)])
@@ -38,7 +38,7 @@ const Dashboard = () => {
     // Função para buscar os dados de usuários por centro
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('https://pint-backend-5gz8.onrender.com/user/users-by-center');
+        const response = await axios.get('https://pintfinal-backend.onrender.com/user/users-by-center');
         const formattedData = [
           ['Centro', 'Users'],
           ...response.data.map(item => [item.centro_nome, parseInt(item.user_count)])
@@ -53,7 +53,7 @@ const Dashboard = () => {
     // Função para buscar os dados de usuários por data de início
     const fetchStartDateData = async () => {
       try {
-        const response = await axios.get('https://pint-backend-5gz8.onrender.com/user/users-by-start-date');
+        const response = await axios.get('https://pintfinal-backend.onrender.com/user/users-by-start-date');
         const formattedData = [
           ['Data de Início', 'Users'],
           ...response.data.map(item => [item.start_date, parseInt(item.user_count)])
@@ -68,7 +68,7 @@ const Dashboard = () => {
     // Função para buscar os dados de eventos por área
     const fetchEventData = async () => {
       try {
-        const response = await axios.get('https://pint-backend-5gz8.onrender.com/evento/eventos-by-area');
+        const response = await axios.get('https://pintfinal-backend.onrender.com/evento/eventos-by-area');
         const formattedData = [
           ['Área', 'Eventos'],
           ...response.data.map(item => [item.area_name, parseInt(item.event_count)])
@@ -83,7 +83,7 @@ const Dashboard = () => {
     // Nova função para buscar a quantidade de comentários
     const fetchCommentData = async () => {
       try {
-        const response = await axios.get('https://pint-backend-5gz8.onrender.com/comentarios_evento/quantidade'); // Chamada ao novo endpoint
+        const response = await axios.get('https://pintfinal-backend.onrender.com/comentarios_evento/quantidade'); // Chamada ao novo endpoint
         const formattedData = [
           ['Tipo', 'Quantidade'],
           ['Total Comentários em Eventos', response.data.comentariosValidados]];
@@ -96,7 +96,7 @@ const Dashboard = () => {
 
     const fetchCommentLocalData = async () => {
       try {
-        const response = await axios.get('https://pint-backend-5gz8.onrender.com/comentarios_local/quantidade'); // Chamada ao novo endpoint
+        const response = await axios.get('https://pintfinal-backend.onrender.com/comentarios_local/quantidade'); // Chamada ao novo endpoint
         const formattedData = [
           ['Tipo', 'Quantidade'],
           ['Total Comentários em Locais', response.data.comentariosValidados]];
@@ -113,7 +113,7 @@ const Dashboard = () => {
         const token = sessionStorage.getItem('token');
         if (!token) throw new Error('Token de autenticação não encontrado.');
 
-        const response = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
+        const response = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
           headers: { 'x-auth-token': token }
         });
         setUserName(response.data.user_name);

@@ -23,9 +23,9 @@ const Registar = () => {
     // Buscar os centros disponíveis da API
     const fetchCentros = async () => {
       try {
-        const response = await axios.get('https://pint-backend-5gz8.onrender.com/centro/list');
+        const response = await axios.get('https://pintfinal-backend.onrender.com/centro/list');
         setCentros(response.data);
-        const formStatusResponse = await axios.get('https://pint-backend-5gz8.onrender.com/formularios/status/1') 
+        const formStatusResponse = await axios.get('https://pintfinal-backend.onrender.com/formularios/status/1') 
         setIsFormActive(formStatusResponse.data.ATIVO); // Verifique se o formulário está ativo ou não
       } catch (error) {
         console.error('Erro ao buscar centros:', error);
@@ -56,7 +56,7 @@ const Registar = () => {
     }
 
     try {
-      await axios.post('https://pint-backend-5gz8.onrender.com/auth/create', {
+      await axios.post('https://pintfinal-backend.onrender.com/auth/create', {
         user_name: name,
         user_mail: email,
         NIF: nif,

@@ -13,16 +13,8 @@ const { Op } = require('sequelize');
 const upload = multer({ dest: 'uploads/' });
 const Notificacoes = require('../models/notificacoes');
 const userPreferences = require('../models/userPreferences');
+const ParticipantesEvento  = require('../models/participantes_evento');
 const Sequelize = require('sequelize');
-
-const serviceKey = path.join(__dirname, 'C:', 'astute-nuance-434614-f3-76edd1642656.json');
-
-const storage = new Storage({
-  keyFilename: serviceKey,
-  projectId: 'astute-nuance-434614-f3',
-});
-
-const bucket = storage.bucket('pint-bucket');
 
 const listEventosByUserCentro = async (req, res) => {
   const { userId } = req.params; // Assumindo que o ID do usuário seja passado como parâmetro
@@ -45,7 +37,8 @@ const listEventosByUserCentro = async (req, res) => {
     // Listar todos os eventos associados ao centro do utilizador
     const eventos = await Eventos.findAll({
       where: {
-        ID_CENTRO: centroId
+        ID_CENTRO: centroId,
+        DISPONIBILIDADE: false
       },
       include: [
         {
@@ -112,28 +105,8 @@ const createEvento = async (req, res) => {
       return res.status(404).json({ error: 'Centro associado ao utilizador não encontrado' });
     }
 
-    let fotoUrl = null; // Inicializa a variável da URL da foto
+    const foto = req.file ? req.file.path : null; // Verifica se existe um arquivo de foto
 
-    // Verifica se existe um arquivo de foto e faz o upload para o Google Cloud Storage
-    if (req.file) {
-      const blob = bucket.file(req.file.originalname);
-      const blobStream = blob.createWriteStream({ resumable: false });
-
-      blobStream.on('error', (err) => {
-        console.error('Erro no upload da foto:', err);
-        return res.status(500).json({ error: 'Erro no upload da foto' });
-      });
-
-      await new Promise((resolve, reject) => {
-        blobStream.on('finish', () => {
-          fotoUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-          resolve();
-        });
-        blobStream.end(req.file.buffer);
-      });
-    }
-
-    // Cria o evento no banco de dados com a URL da foto, se existir
     const novoEvento = await Eventos.create({
       ID_CENTRO,  // Centro obtido automaticamente do utilizador
       ID_CRIADOR,
@@ -146,7 +119,7 @@ const createEvento = async (req, res) => {
       ID_SUB_AREA: ID_SUB_AREA || null, // Certifica-se de que será null se não estiver definido
       N_PARTICIPANTES,
       ID_APROVADOR,
-      foto: fotoUrl, // Salva a URL da foto no evento
+      foto
     });
 
     // Buscar utilizadores que tenham a área ou subárea nas preferências
@@ -154,7 +127,7 @@ const createEvento = async (req, res) => {
       where: {
         [Sequelize.Op.or]: [
           { ID_AREA },
-          { ID_SUBAREA: ID_SUB_AREA || null }
+          { ID_SUBAREA: ID_SUB_AREA || null}
         ]
       },
       include: [{
@@ -258,7 +231,15 @@ const listEventosDispCentroCal = async (req, res) => {
       }
     });
 
-    res.status(200).json(eventos);
+    // Formatar as datas para ISO 8601
+    const eventosFormatados = eventos.map(evento => {
+      return {
+        ...evento.toJSON(),
+        DATA_EVENTO: new Date(evento.DATA_EVENTO).toISOString(), // Garantir formato ISO 8601
+      };
+    });
+
+    res.status(200).json(eventosFormatados);
   } catch (error) {
     console.error('Erro ao listar eventos disponíveis no centro do utilizador:', error);
     res.status(500).json({ message: 'Erro ao listar eventos disponíveis no centro do utilizador.', error: error.message });
@@ -493,7 +474,26 @@ const updateEvento = async (req, res) => {
           evento.foto = foto;
       }
 
-      await evento.save();
+
+      // Buscar os participantes do evento
+    const participantes = await ParticipantesEvento.findAll({
+      where: { ID_EVENTO: eventoId },
+      include: [{
+        model: Users,
+        attributes: ['ID_FUNCIONARIO', 'user_name', 'user_mail']
+      }]
+    });
+
+    // Criar notificações para os participantes
+    const notificacoes = participantes.map(participante => ({
+      ID_USER: participante.User.ID_FUNCIONARIO,
+      MENSAGEM: `O evento ${evento.NOME_EVENTO} foi atualizado. Verifique as novas informações.`,
+      LIDA: false
+    }));
+
+    await Notificacoes.bulkCreate(notificacoes);
+
+    await evento.save();
 
       res.status(200).json({ message: 'Evento atualizado com sucesso.', evento });
   } catch (error) {
@@ -597,6 +597,7 @@ const listEventosBySubArea = async (req, res) => {
     return res.status(500).json({ error: 'Erro ao listar eventos por subárea.' });
   }
 };
+
 const eventos_por_area = async (req, res) => {
   try {
     const eventosCount = await Eventos.findAll({
@@ -619,4 +620,28 @@ const eventos_por_area = async (req, res) => {
   }
 };
 
-module.exports = { listEventosByUserCentro, createEvento, listEventos, listEventosDispCentroCal, updateEvento, deleteEvento, eventoDetail, listEventosDisp, listEventosDispCentro, listEventosByArea, listarEventosCriador,listEventosBySubArea,eventos_por_area };
+const invalidateEvento = async (req, res) => {
+  const { id } = req.params; // ID do local passado como parâmetro na URL
+
+  try {
+    // Encontrar o local pelo ID
+    const evento = await Eventos.findByPk(id);
+
+    if (!evento) {
+      return res.status(404).json({ message: 'Evento não encontrado.' });
+    }
+
+    // Atualizar o campo VALIDAR para true
+    evento.DISPONIBILIDADE = false;
+
+    // Salvar as alterações no banco de dados
+    await evento.save();
+
+    res.status(200).json({ message: 'Evento validado com sucesso.', evento });
+  } catch (error) {
+    console.error('Erro ao validar evento:', error);
+    res.status(500).json({ message: 'Erro ao validar evento.', error: error.message });
+  }
+};
+
+module.exports = { listEventosByUserCentro, createEvento, listEventos, listEventosDispCentroCal, updateEvento, deleteEvento, eventoDetail, listEventosDisp, listEventosDispCentro, listEventosByArea, listarEventosCriador,listEventosBySubArea,eventos_por_area, invalidateEvento };

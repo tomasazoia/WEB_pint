@@ -31,16 +31,16 @@ const DetalhesLocal = () => {
   useEffect(() => {
     const fetchLocal = async () => {
       try {
-        const response = await axios.get(`https://pint-backend-5gz8.onrender.com/locais/get/${id}`);
+        const response = await axios.get(`https://pintfinal-backend.onrender.com/locais/get/${id}`);
         setLocal(response.data);
 
-        const averageReviewResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/review/average/local/${id}`);
+        const averageReviewResponse = await axios.get(`https://pintfinal-backend.onrender.com/review/average/local/${id}`);
         setAverageReview(averageReviewResponse.data.averageReview);
 
-        const comentariosResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/comentarios_local/listlocal/${id}`);
+        const comentariosResponse = await axios.get(`https://pintfinal-backend.onrender.com/comentarios_local/listlocal/${id}`);
         setComentarios(comentariosResponse.data);
 
-        const totalReviewsResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/review/local/get/${id}`);
+        const totalReviewsResponse = await axios.get(`https://pintfinal-backend.onrender.com/review/local/get/${id}`);
         setTotalReviews(totalReviewsResponse.data.count);
 
         setErro('');
@@ -101,7 +101,7 @@ const DetalhesLocal = () => {
 
       if (!token) throw new Error('Token de autenticação não encontrado.');
 
-      const userProfileResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
+      const userProfileResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
         headers: {
           'x-auth-token': token
         }
@@ -116,21 +116,30 @@ const DetalhesLocal = () => {
         REVIEW: newReview
       };
 
-      await axios.post(`https://pint-backend-5gz8.onrender.com/review/local/${id}`, reviewData);
+      await axios.post(`https://pintfinal-backend.onrender.com/review/local/${id}`, reviewData);
 
-      const averageReviewResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/review/average/local/${id}`);
+      // Atualiza os dados de avaliação
+      const averageReviewResponse = await axios.get(`https://pintfinal-backend.onrender.com/review/average/local/${id}`);
       setAverageReview(averageReviewResponse.data.averageReview);
 
-      const totalReviewsResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/review/local/get/${id}`);
+      const totalReviewsResponse = await axios.get(`https://pintfinal-backend.onrender.com/review/local/get/${id}`);
       setTotalReviews(totalReviewsResponse.data.count);
 
+      // Limpa o formulário
       setNewReview('');
       setShowReviewForm(false);
+      setErro(''); // Limpa a mensagem de erro após o sucesso
     } catch (error) {
-      console.error('Erro ao adicionar review:', error);
-      setErro('Erro ao adicionar review.');
+      // Verifica se o erro está relacionado com a duplicação de reviews
+      if (error.response && error.response.status === 400) {
+        setErro('Já deixou uma review neste local.');
+      } else {
+        console.error('Erro ao adicionar review:', error);
+        setErro('Erro ao adicionar review.');
+      }
     }
   };
+
 
   const handleAddComentario = async () => {
     try {
@@ -138,7 +147,7 @@ const DetalhesLocal = () => {
 
       if (!token) throw new Error('Token de autenticação não encontrado.');
 
-      const userProfileResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
+      const userProfileResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
         headers: { 'x-auth-token': token }
       });
 
@@ -152,7 +161,7 @@ const DetalhesLocal = () => {
         ID_LOCAL: local.ID_LOCAL,
       };
 
-      await axios.post('https://pint-backend-5gz8.onrender.com/comentarios_local/create', comentarioData);
+      await axios.post('https://pintfinal-backend.onrender.com/comentarios_local/create', comentarioData);
       Swal.fire({
         title: 'Comentário enviado!',
         text: 'O seu comentário aguarda confirmação.',
@@ -161,7 +170,7 @@ const DetalhesLocal = () => {
       });
       setNovoComentario('');
 
-      const comentariosResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/comentarios_local/listlocal/${id}`);
+      const comentariosResponse = await axios.get(`https://pintfinal-backend.onrender.com/comentarios_local/listlocal/${id}`);
       setComentarios(comentariosResponse.data);
     } catch (error) {
       console.error('Erro ao adicionar comentário:', error);
@@ -171,7 +180,7 @@ const DetalhesLocal = () => {
 
   const handleDeleteComentario = async (idComentario) => {
     try {
-      await axios.put(`https://pint-backend-5gz8.onrender.com/comentarios_local/invalidar/${idComentario}`);
+      await axios.put(`https://pintfinal-backend.onrender.com/comentarios_local/invalidar/${idComentario}`);
       setComentarios(prevComentarios => prevComentarios.filter(comentario => comentario.ID_COMENTARIO !== idComentario));
     } catch (error) {
       console.error('Erro ao apagar comentário:', error);
@@ -212,7 +221,7 @@ const DetalhesLocal = () => {
       <div className="card shadow-lg p-3 mb-5 bg-white rounded">
         {local.foto && (
           <img
-            src={`https://pint-backend-5gz8.onrender.com/${local.foto}`}
+            src={`https://pintfinal-backend.onrender.com/${local.foto}`}
             className="card-img-top img-local-detalhes"
             alt={local.DESIGNACAO_LOCAL}
           />
@@ -247,24 +256,31 @@ const DetalhesLocal = () => {
           {showReviewForm && (
             <div className="mt-3">
               <div className="form-group">
-                <label htmlFor="reviewInput">Insira sua avaliação (0 a 5):</label>
-                <input
-                  type="number"
+                <label htmlFor="reviewInput">Insira a sua avaliação (0.5 a 5):</label>
+                <select
                   className="form-control"
                   id="reviewInput"
                   value={newReview}
                   onChange={(e) => setNewReview(e.target.value)}
-                  min="0"
-                  max="5"
-                  step="0.1"
                   required
-                />
+                >
+                  <option value="">Selecione uma avaliação</option>
+                  {[...Array(10).keys()].map((value) => {
+                    const ratingValue = (value + 1) * 0.5;
+                    return (
+                      <option key={ratingValue} value={ratingValue}>
+                        {ratingValue}
+                      </option>
+                    );
+                  })}
+                </select>
               </div>
               <button className="btn btn-success mt-2" onClick={handleSubmitReview}>
                 Enviar Review
               </button>
             </div>
           )}
+
         </div>
       </div>
       <h2 className="mt-3 mb-4 text-center">Compartilhar Evento</h2>

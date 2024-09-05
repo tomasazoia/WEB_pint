@@ -17,13 +17,13 @@ const Notificacoes = () => {
 
         try {
             // Obter o ID do utilizador autenticado
-            const userResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
+            const userResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
                 headers: {
                     'x-auth-token': token
                 }
             });
             const userId = userResponse.data.ID_FUNCIONARIO;
-                const response = await axios.get(`https://pint-backend-5gz8.onrender.com/notificacoes/user/${userId}`, {
+                const response = await axios.get(`https://pintfinal-backend.onrender.com/notificacoes/user/${userId}`, {
                     headers: {
                         'x-auth-token': token
                     }
@@ -40,7 +40,7 @@ const Notificacoes = () => {
 
     const marcarComoLida = async (id) => {
         try {
-            await axios.put(`https://pint-backend-5gz8.onrender.com/notificacoes/read/${id}`);
+            await axios.put(`https://pintfinal-backend.onrender.com/notificacoes/read/${id}`);
             setNotificacoes(notificacoes.map(n => n.ID_NOTIFICACAO === id ? { ...n, LIDA: true } : n));
             Swal.fire('Sucesso', 'Notificação marcada como lida!', 'success');
         } catch (error) {
@@ -51,7 +51,7 @@ const Notificacoes = () => {
 
     const apagarNotificacao = async (id) => {
         try {
-            await axios.delete(`https://pint-backend-5gz8.onrender.com/notificacoes/delete/${id}`);
+            await axios.delete(`https://pintfinal-backend.onrender.com/notificacoes/delete/${id}`);
             setNotificacoes(notificacoes.filter(n => n.ID_NOTIFICACAO !== id));
             Swal.fire('Sucesso', 'Notificação apagada!', 'success');
         } catch (error) {

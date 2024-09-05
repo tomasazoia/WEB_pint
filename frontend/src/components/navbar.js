@@ -38,117 +38,234 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
+    <nav className="navbar navbar-expand-lg bg-light shadow-sm fixed-top">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/dashboard">
-          <img src="/logotipo-softinsa.png" alt="Logotipo Softinsa" className="navbar-logo" />
+          <img
+            src="/logotipo-softinsa.png"
+            alt="Logotipo Softinsa"
+            className="navbar-logo"
+            style={{ width: "150px" }}
+          />
         </Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
+
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav ms-auto">
+            {/* Dashboard */}
             <li className="nav-item">
-              <Link className="nav-link active text-secondary fs-6" to="/dashboard">Dashboard</Link>
+              <Link className="nav-link text-dark" to="/dashboard">
+                Dashboard
+              </Link>
             </li>
+
+            {/* Calendário */}
             <li className="nav-item">
-              <Link className="nav-link text-secondary fs-6" to="/calendario">Calendário</Link>
+              <Link className="nav-link text-dark" to="/calendario">
+                Calendário
+              </Link>
             </li>
+
+            {/* Formulários */}
             <li className="nav-item">
-              <Link className="nav-link text-secondary fs-6" to="/formularios">Formulários</Link>
+              <Link className="nav-link text-dark" to="/formularios">
+                Formulários
+              </Link>
             </li>
+
+            {/* Notificações */}
             <li className="nav-item">
-              <Link className="nav-link text-secondary fs-6" to="/notificacoes">Notificações</Link>
+              <Link className="nav-link text-dark" to="/notificacoes">
+                Notificações
+              </Link>
             </li>
+
+            {/* Utilizadores */}
             <li className="nav-item dropdown">
-              <Link className="nav-link dropdown-toggle text-secondary fs-6" to="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <Link
+                className="nav-link dropdown-toggle text-dark"
+                to="#"
+                id="userDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 Utilizadores
               </Link>
               <ul className="dropdown-menu" aria-labelledby="userDropdown">
-                <li><Link className="dropdown-item" to="/user/list">Gerir Utilizadores Validados</Link></li>
-                <li><Link className="dropdown-item" to="/user/listNVal">Listar Utilizadores por Validar</Link></li>
+                <li>
+                  <Link className="dropdown-item" to="/user/list">
+                    Gerir Utilizadores Validados
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/user/listNVal">
+                    Listar Utilizadores por Validar
+                  </Link>
+                </li>
               </ul>
             </li>
-            <li className="nav-item dropdown">
-              <Link className="nav-link dropdown-toggle text-secondary fs-6" to="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Reports em Comentarios
-              </Link>
-              <ul className="dropdown-menu" aria-labelledby="reportsDropdown">
-                <li><Link className="dropdown-item" to="/reportEventos">Eventos</Link></li>
-                <li><Link className="dropdown-item" to="/reportLocais">Locais</Link></li>
-              </ul>
-            </li>
+
+
+            {/* Centros */}
             <li className="nav-item">
-              <Link className="nav-link text-secondary fs-6" to="/centro/list">Centros</Link>
-            </li>
-            <li className="nav-item dropdown">
-              <Link className="nav-link dropdown-toggle text-secondary fs-6" to="#" id="comDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Validar Comentários
+              <Link className="nav-link text-dark" to="/centro/list">
+                Centros
               </Link>
-              <ul className="dropdown-menu" aria-labelledby="comDropdown">
-                <li><Link className="dropdown-item" to="/comentariosinv">Eventos</Link></li>
-                <li><Link className="dropdown-item" to="/comentariosinvlocal">Locais</Link></li>
-                <li><Link className="dropdown-item" to="/validarcomfor">Foruns</Link></li>
-              </ul>
-            </li>
+            </li>            
+
+            {/* Estabelecimentos */}
             <li className="nav-item dropdown">
-              <Link className="nav-link dropdown-toggle text-secondary fs-6" to="#" id="locaisDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <Link
+                className="nav-link dropdown-toggle text-dark"
+                to="#"
+                id="locaisDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 Estabelecimentos
               </Link>
               <ul className="dropdown-menu" aria-labelledby="locaisDropdown">
-                <li><Link className="dropdown-item" to="/locais/list">Gerir Estabelecimentos Validados</Link></li>
-                <li><Link className="dropdown-item" to="/locais/validarlocais">Listar Estabelecimentos por Validar</Link></li>
+                <li>
+                  <Link className="dropdown-item" to="/locais/list">
+                    Gerir Estabelecimentos Validados
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/locais/validarlocais">
+                    Listar Estabelecimentos por Validar
+                  </Link>
+                </li>
               </ul>
             </li>
+
+            {/* Eventos */}
             <li className="nav-item dropdown">
-              <Link className="nav-link dropdown-toggle text-secondary fs-6" to="#" id="eventosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <Link
+                className="nav-link dropdown-toggle text-dark"
+                to="#"
+                id="eventosDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 Eventos
               </Link>
               <ul className="dropdown-menu" aria-labelledby="eventosDropdown">
-                <li><Link className="dropdown-item" to="/evento/manage">Gerir Eventos</Link></li>
-                <li><Link className="dropdown-item" to="/evento/list">Listar Eventos Disponíveis</Link></li>
+                <li>
+                  <Link className="dropdown-item" to="/evento/manage">
+                    Gerir Eventos
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/evento/list">
+                    Listar Eventos Disponíveis
+                  </Link>
+                </li>
               </ul>
             </li>
+
             {/* Áreas */}
             <li className="nav-item dropdown">
-              <Link className="nav-link dropdown-toggle text-secondary fs-6" to="#" id="areaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <Link
+                className="nav-link dropdown-toggle text-dark"
+                to="#"
+                id="areaDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 Áreas
               </Link>
               <ul className="dropdown-menu" aria-labelledby="areaDropdown">
-                {areas.map(area => (
+                {areas.map((area) => (
                   <li key={area.ID_AREA}>
-                    <Link className="dropdown-item" to={`/locais/listarea/${area.ID_AREA}`}>{area.NOME_AREA}</Link>
+                    <Link
+                      className="dropdown-item"
+                      to={`/locais/listarea/${area.ID_AREA}`}
+                    >
+                      {area.NOME_AREA}
+                    </Link>
                   </li>
                 ))}
-                <div className="dropdown-item create-btn">
-                  <Link to="/area/create" className="btn btn-primary w-100">Gerir Áreas</Link>
-                </div>
+                <li className="dropdown-item create-btn">
+                  <Link
+                    to="/area/create"
+                    className="btn btn-outline-primary w-100"
+                  >
+                    Gerir Áreas
+                  </Link>
+                </li>
               </ul>
             </li>
+
             {/* Sub-Áreas */}
             <li className="nav-item dropdown">
-              <Link className="nav-link dropdown-toggle text-secondary fs-6" to="#" id="subareaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <Link
+                className="nav-link dropdown-toggle text-dark"
+                to="#"
+                id="subareaDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
                 Sub-Áreas
               </Link>
               <ul className="dropdown-menu" aria-labelledby="subareaDropdown">
-                {subareas.map(subarea => (
+                {subareas.map((subarea) => (
                   <li key={subarea.ID_SUB_AREA}>
-                    <Link className="dropdown-item" to={`/locais/listsubarea/${subarea.ID_SUB_AREA}`}>{subarea.NOME_SUBAREA}</Link>
+                    <Link
+                      className="dropdown-item"
+                      to={`/locais/listsubarea/${subarea.ID_SUB_AREA}`}
+                    >
+                      {subarea.NOME_SUBAREA}
+                    </Link>
                   </li>
                 ))}
-                <div className="dropdown-item create-btn">
-                  <Link to="/subarea/create" className="btn btn-primary w-100">Gerir Sub-Áreas</Link>
-                </div>
+                <li className="dropdown-item create-btn">
+                  <Link
+                    to="/subarea/create"
+                    className="btn btn-outline-primary w-100"
+                  >
+                    Gerir Sub-Áreas
+                  </Link>
+                </li>
               </ul>
             </li>
+
+            {/* Perfil */}
             <li className="nav-item">
-              <Link className="nav-link text-secondary fs-6" to="/user/profile">Perfil</Link>
+              <Link className="nav-link text-dark" to="/user/profile">
+                Perfil
+              </Link>
             </li>
+
+            {/* Informações */}
             <li className="nav-item">
-              <Link className="nav-link text-secondary fs-6" to="/infos">Informações E Avisos</Link>
+              <Link className="nav-link text-dark" to="/infos">
+                Informações e Avisos
+              </Link>
             </li>
           </ul>
-          <button className="btn btn-outline-danger ms-3" onClick={handleLogout}>Logout</button>
+
+          {/* Botão de Logout */}
+          <button
+            className="btn btn-danger ms-3"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </div>
       </div>
     </nav>

@@ -38,20 +38,20 @@ const DetalhesEvento = () => {
 
         const fetchData = async () => {
             try {
-                const userResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
+                const userResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
                     headers: { 'x-auth-token': token }
                 });
                 userRef.current = userResponse.data;
 
-                const eventoResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/evento/get/${id}`);
+                const eventoResponse = await axios.get(`https://pintfinal-backend.onrender.com/evento/get/${id}`);
                 eventoRef.current = eventoResponse.data;
                 setEvento(eventoResponse.data);
                 setNParticipantes(eventoResponse.data.N_PARTICIPANTES);
-                const participantesResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/participantesevento/eventos/${id}/participantes`);
+                const participantesResponse = await axios.get(`https://pintfinal-backend.onrender.com/participantesevento/eventos/${id}/participantes`);
                 setParticipantes(participantesResponse.data);
                 const isParticipating = participantesResponse.data.some(participante => participante.User.ID_FUNCIONARIO === userRef.current.ID_FUNCIONARIO);
                 setParticipando(isParticipating);
-                const comentariosResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/comentarios_evento/listevento/${id}`);
+                const comentariosResponse = await axios.get(`https://pintfinal-backend.onrender.com/comentarios_evento/listevento/${id}`);
                 setComentarios(comentariosResponse.data);
             } catch (error) {
                 console.error('Erro ao carregar dados:', error);
@@ -64,31 +64,31 @@ const DetalhesEvento = () => {
 
     useEffect(() => {
         if (evento && mapRef.current && !map) {
-          const defaultIcon = L.icon({
-            iconUrl: markerIcon,
-            iconRetinaUrl: markerIconRetina,
-            shadowUrl: markerShadow,
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-          });
-    
-          const [lat, lng] = evento.LOCALIZACAO.split(',').map(Number);
-    
-          const mapInstance = L.map(mapRef.current).setView([lat, lng], 14);
-    
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-          }).addTo(mapInstance);
-    
-          L.marker([lat, lng], { icon: defaultIcon }).addTo(mapInstance)
-            .bindPopup(evento.NOME_EVENTO)
-            .openPopup();
-    
-          setMap(mapInstance);
+            const defaultIcon = L.icon({
+                iconUrl: markerIcon,
+                iconRetinaUrl: markerIconRetina,
+                shadowUrl: markerShadow,
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            const [lat, lng] = evento.LOCALIZACAO.split(',').map(Number);
+
+            const mapInstance = L.map(mapRef.current).setView([lat, lng], 14);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(mapInstance);
+
+            L.marker([lat, lng], { icon: defaultIcon }).addTo(mapInstance)
+                .bindPopup(evento.NOME_EVENTO)
+                .openPopup();
+
+            setMap(mapInstance);
         }
-      }, [evento, map]);
+    }, [evento, map]);
 
     const handleAddComentario = async () => {
         if (!novoComentario.trim() || !userRef.current) {
@@ -102,7 +102,7 @@ const DetalhesEvento = () => {
                 ID_EVENTO: evento.ID_EVENTO,
             };
 
-            await axios.post('https://pint-backend-5gz8.onrender.com/comentarios_evento/create', comentarioData);
+            await axios.post('https://pintfinal-backend.onrender.com/comentarios_evento/create', comentarioData);
 
             setNovoComentario('');
 
@@ -113,7 +113,7 @@ const DetalhesEvento = () => {
                 confirmButtonText: 'OK',
             });
 
-            const comentariosResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/comentarios_evento/listevento/${id}`);
+            const comentariosResponse = await axios.get(`https://pintfinal-backend.onrender.com/comentarios_evento/listevento/${id}`);
             setComentarios(comentariosResponse.data);
         } catch (error) {
             console.error('Erro ao adicionar comentário:', error);
@@ -124,7 +124,7 @@ const DetalhesEvento = () => {
 
     const handleDeleteComentario = async (idComentario) => {
         try {
-            await axios.put(`https://pint-backend-5gz8.onrender.com/comentarios_evento/invalidar/${idComentario}`);
+            await axios.put(`https://pintfinal-backend.onrender.com/comentarios_evento/invalidar/${idComentario}`);
 
             setComentarios(prevComentarios => prevComentarios.filter(comentario => comentario.ID_COMENTARIO !== idComentario));
         } catch (error) {
@@ -146,7 +146,7 @@ const DetalhesEvento = () => {
                 ID_EVENTO: evento.ID_EVENTO,
             };
 
-            await axios.post('https://pint-backend-5gz8.onrender.com/participantesevento/participantes', participanteData);
+            await axios.post('https://pintfinal-backend.onrender.com/participantesevento/participantes', participanteData);
 
             setParticipando(true);
             setNParticipantes(prev => prev - 1);
@@ -164,7 +164,7 @@ const DetalhesEvento = () => {
         }
 
         try {
-            await axios.delete(`https://pint-backend-5gz8.onrender.com/participantesevento/participantesdelete/${userRef.current.ID_FUNCIONARIO}/${evento.ID_EVENTO}`);
+            await axios.delete(`https://pintfinal-backend.onrender.com/participantesevento/participantesdelete/${userRef.current.ID_FUNCIONARIO}/${evento.ID_EVENTO}`);
 
             setParticipando(false);
             setNParticipantes(prev => prev + 1);
@@ -184,7 +184,7 @@ const DetalhesEvento = () => {
                         <div className="col-md-6 d-flex align-items-center justify-content-center">
                             {evento.foto ? (
                                 <img
-                                    src={`https://pint-backend-5gz8.onrender.com/${evento.foto}`}
+                                    src={`https://pintfinal-backend.onrender.com/${evento.foto}`}
                                     alt={evento.NOME_EVENTO}
                                     className="img-fluid rounded-start img-fixa-evento-detalhes"
                                 />
@@ -207,7 +207,17 @@ const DetalhesEvento = () => {
                                     <p className="card-text"><strong>Centro:</strong> {evento.centro.NOME_CENTRO}</p>
                                 )}
                                 <p className="card-text"><strong>Tipo de Evento:</strong> {evento.TIPO_EVENTO}</p>
-                                <p className="card-text"><strong>Data do Evento:</strong> {new Date(evento.DATA_EVENTO).toLocaleDateString()}</p>
+                                <p className="card-text">
+                                    <strong>Data do Evento: </strong>
+                                    {new Date(evento.DATA_EVENTO).toLocaleString('pt-BR', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        hour12: true // Exibe a hora no formato de 12 horas (AM/PM)
+                                    })}
+                                </p>
                                 <p className="card-text"><strong>Área:</strong> {evento.area.NOME_AREA}</p>
                                 <p className="card-text">
                                     <strong>Sub-Área:</strong> {evento.sub_area ? evento.sub_area.NOME_SUBAREA : "Sub Área não associada"}
@@ -230,8 +240,8 @@ const DetalhesEvento = () => {
                         </div>
                     </div>
                     <div className="map-container mt-4">
-            <div ref={mapRef} style={{ height: '300px', width: '100%' }}></div>
-          </div>
+                        <div ref={mapRef} style={{ height: '300px', width: '100%' }}></div>
+                    </div>
                     <hr style={{ width: '80%', marginLeft: '10%' }}></hr>
                     <h2 className="mt-3 mb-4 text-center">Compartilhar Evento</h2>
                     <div className="d-flex justify-content-center mb-4">

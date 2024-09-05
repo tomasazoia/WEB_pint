@@ -19,7 +19,7 @@ const ManageUsers = () => {
     }
 
     try {
-      const userResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
+      const userResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
         headers: {
           'x-auth-token': token
         }
@@ -32,7 +32,7 @@ const ManageUsers = () => {
         return;
       }
 
-      const usersResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/user/listvalidados/${userResponse.data.ID_FUNCIONARIO}`, {
+      const usersResponse = await axios.get(`https://pintfinal-backend.onrender.com/user/listvalidados/${userResponse.data.ID_FUNCIONARIO}`, {
         headers: {
           'x-auth-token': token
         }
@@ -48,10 +48,10 @@ const ManageUsers = () => {
   const toggleAdminStatus = async (userId, isAdmin) => {
     try {
       if (isAdmin) {
-        await axios.put(`https://pint-backend-5gz8.onrender.com/user/unadmin/${userId}`);
+        await axios.put(`https://pintfinal-backend.onrender.com/user/unadmin/${userId}`);
         alert('Utilizador rebaixado para usuário normal com sucesso!');
       } else {
-        await axios.put(`https://pint-backend-5gz8.onrender.com/user/admin/${userId}`);
+        await axios.put(`https://pintfinal-backend.onrender.com/user/admin/${userId}`);
         alert('Utilizador promovido a administrador com sucesso!');
       }
       fetchUsers(); // Atualiza a lista de utilizadores após a mudança de status

@@ -26,7 +26,7 @@ const AdicionarCentro = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('https://pint-backend-5gz8.onrender.com/centro/create', formValues);
+      const response = await axios.post('https://pintfinal-backend.onrender.com/centro/create', formValues);
 
       Swal.fire({
         icon: 'success',

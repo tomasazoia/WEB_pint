@@ -18,7 +18,7 @@ const GerenciarSubAreas = () => {
 
     const fetchSubAreas = async () => {
         try {
-            const response = await axios.get('https://pint-backend-5gz8.onrender.com/subarea/list');
+            const response = await axios.get('https://pintfinal-backend.onrender.com/subarea/list');
             setSubAreas(response.data);
         } catch (error) {
             console.error('Erro ao buscar subáreas:', error);
@@ -28,7 +28,7 @@ const GerenciarSubAreas = () => {
 
     const fetchAreas = async () => {
         try {
-            const response = await axios.get('https://pint-backend-5gz8.onrender.com/area/list');
+            const response = await axios.get('https://pintfinal-backend.onrender.com/area/list');
             setAreas(response.data);
         } catch (error) {
             console.error('Erro ao buscar áreas:', error);
@@ -48,7 +48,7 @@ const GerenciarSubAreas = () => {
             const token = sessionStorage.getItem('token');
             if (selectedSubAreaId) {
                 // Atualizar subárea existente
-                await axios.put(`https://pint-backend-5gz8.onrender.com/subarea/update/${selectedSubAreaId}`, {
+                await axios.put(`https://pintfinal-backend.onrender.com/subarea/update/${selectedSubAreaId}`, {
                     NOME_SUBAREA: nomeSubArea,
                     ID_AREA: selectedAreaId  // Envia o ID da área
                 }, {
@@ -63,7 +63,7 @@ const GerenciarSubAreas = () => {
                 });
             } else {
                 // Criar nova subárea
-                await axios.post('https://pint-backend-5gz8.onrender.com/subarea/checknormal', {
+                await axios.post('https://pintfinal-backend.onrender.com/subarea/checknormal', {
                     NOME_SUBAREA: nomeSubArea,
                     ID_AREA: selectedAreaId  // Envia o ID da área
                 }, {
@@ -98,7 +98,7 @@ const GerenciarSubAreas = () => {
     const handleDelete = async (subAreaId) => {
         try {
             const token = sessionStorage.getItem('token');
-            await axios.delete(`https://pint-backend-5gz8.onrender.com/subarea/delete/${subAreaId}`, {
+            await axios.delete(`https://pintfinal-backend.onrender.com/subarea/delete/${subAreaId}`, {
                 headers: {
                     'x-auth-token': token
                 }

@@ -27,7 +27,7 @@ const ListarEventosDoCentro = () => {
 
         try {
             // Obter o ID do utilizador autenticado
-            const userResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
+            const userResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
                 headers: {
                     'x-auth-token': token
                 }
@@ -35,7 +35,7 @@ const ListarEventosDoCentro = () => {
             const userId = userResponse.data.ID_FUNCIONARIO;
 
             // Obter eventos do centro ao qual o utilizador pertence
-            const eventosResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/evento/user/${userId}/centro`, {
+            const eventosResponse = await axios.get(`https://pintfinal-backend.onrender.com/evento/user/${userId}/centro`, {
                 headers: {
                     'x-auth-token': token
                 }
@@ -97,7 +97,7 @@ const ListarEventosDoCentro = () => {
                 formData.append('foto', currentEvento.foto);
             }
 
-            await axios.put(`https://pint-backend-5gz8.onrender.com/evento/update/${currentEvento.ID_EVENTO}`, formData, {
+            await axios.put(`https://pintfinal-backend.onrender.com/evento/update/${currentEvento.ID_EVENTO}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -126,7 +126,7 @@ const ListarEventosDoCentro = () => {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        await axios.delete(`https://pint-backend-5gz8.onrender.com/evento/delete/${id}`);
+                        await axios.delete(`https://pintfinal-backend.onrender.com/evento/delete/${id}`);
                         setEventos(eventos.filter(evento => evento.ID_EVENTO !== id));
                         Swal.fire(
                             'Eliminado!',
@@ -169,7 +169,7 @@ const ListarEventosDoCentro = () => {
 
     return (
         <div className="container mt-4">
-            <h1>Lista de Eventos do Meu Centro</h1>
+            <h1>Lista de Eventos Indisponiveis do Meu Centro</h1>
             {error && <div className="alert alert-danger">{error}</div>}
             
             <table className="table table-bordered">

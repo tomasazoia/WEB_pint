@@ -129,12 +129,25 @@ exports.addReviewToLocal = async (req, res) => {
             return res.status(404).json({ error: 'Utilizador não encontrado.' });
         }
 
+        // Verificar se já existe uma review do utilizador para o local
+        const existingReview = await Review.findOne({
+            where: {
+                ID_LOCAL,
+                ID_CRIADOR
+            }
+        });
+
+        if (existingReview) {
+            return res.status(400).json({ error: 'O utilizador já deixou uma review para este local.' });
+        }
+
         // Criar a review associada ao local
         const newReview = await Review.create({
             ID_LOCAL,
             ID_CRIADOR,
             REVIEW
         });
+
         // Enviar uma notificação ao criador do local
         const criadorDoLocal = await Users.findByPk(local.ID_CRIADOR);
         if (criadorDoLocal) {
@@ -189,5 +202,28 @@ exports.getAverageReviewByLocal = async (req, res) => {
     } catch (error) {
         console.error('Erro ao calcular a média das reviews:', error);
         return res.status(500).json({ message: 'Erro ao calcular a média das reviews.', error });
+    }
+};
+
+exports._getReviewsByLocal = async (req, res) => {
+    const { id } = req.params; // ID do local passado na URL
+
+    try {
+        // Buscar todas as reviews associadas ao local pelo ID_LOCAL
+        const reviews = await Review.findAll({
+            where: {
+                ID_LOCAL: id
+            }
+        });
+
+        if (reviews.length === 0) {
+            return res.status(404).json({ message: 'Nenhuma review encontrada para este local.' });
+        }
+
+        // Retornar as reviews encontradas
+        res.status(200).json(reviews);
+    } catch (error) {
+        console.error('Erro ao obter reviews do local:', error);
+        res.status(500).json({ error: 'Erro ao obter reviews do local.' });
     }
 };

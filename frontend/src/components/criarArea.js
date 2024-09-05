@@ -16,7 +16,7 @@ const CriarArea = () => {
 
     const fetchAreas = async () => {
         try {
-            const response = await axios.get('https://pint-backend-5gz8.onrender.com/area/list');
+            const response = await axios.get('https://pintfinal-backend.onrender.com/area/list');
             setAreas(response.data);
         } catch (error) {
             console.error('Erro ao carregar áreas:', error);
@@ -36,7 +36,7 @@ const CriarArea = () => {
             const token = sessionStorage.getItem('token');
             if (selectedArea) {
                 // Editar área existente
-                await axios.put(`https://pint-backend-5gz8.onrender.com/area/update/${selectedArea.ID_AREA}`, { NOME_AREA: nomeArea }, {
+                await axios.put(`https://pintfinal-backend.onrender.com/area/update/${selectedArea.ID_AREA}`, { NOME_AREA: nomeArea }, {
                     headers: {
                         'x-auth-token': token
                     }
@@ -48,7 +48,7 @@ const CriarArea = () => {
                 });
             } else {
                 // Criar nova área
-                const response = await axios.post('https://pint-backend-5gz8.onrender.com/area/create', { NOME_AREA: nomeArea }, {
+                const response = await axios.post('https://pintfinal-backend.onrender.com/area/create', { NOME_AREA: nomeArea }, {
                     headers: {
                         'x-auth-token': token
                     }
@@ -78,7 +78,7 @@ const CriarArea = () => {
     const handleDelete = async (areaId) => {
         try {
             const token = sessionStorage.getItem('token');
-            await axios.delete(`https://pint-backend-5gz8.onrender.com/area/delete/${areaId}`, {
+            await axios.delete(`https://pintfinal-backend.onrender.com/area/delete/${areaId}`, {
                 headers: {
                     'x-auth-token': token
                 }

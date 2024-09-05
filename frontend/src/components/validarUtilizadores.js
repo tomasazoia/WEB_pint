@@ -20,7 +20,7 @@ const UsersNaoValidados = () => {
     }
 
     try {
-      const userResponse = await axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
+      const userResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
         headers: {
           'x-auth-token': token
         }
@@ -32,7 +32,7 @@ const UsersNaoValidados = () => {
         return;
       }
 
-      const usersResponse = await axios.get(`https://pint-backend-5gz8.onrender.com/user/listnaovalidados/${userResponse.data.ID_FUNCIONARIO}`, {
+      const usersResponse = await axios.get(`https://pintfinal-backend.onrender.com/user/listnaovalidados/${userResponse.data.ID_FUNCIONARIO}`, {
         headers: {
           'x-auth-token': token
         }
@@ -46,7 +46,7 @@ const UsersNaoValidados = () => {
 
   const validarUser = async (userId) => {
     try {
-      await axios.put(`https://pint-backend-5gz8.onrender.com/user/validar/${userId}`);
+      await axios.put(`https://pintfinal-backend.onrender.com/user/validar/${userId}`);
       alert('Utilizador validado com sucesso!');
       fetchUsers(); // Atualiza a lista de utilizadores após validar
     } catch (error) {

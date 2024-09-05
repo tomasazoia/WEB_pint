@@ -45,9 +45,9 @@ const CriarEvento = () => {
     const fetchData = async () => {
       try {
         const [utilizadoresResponse, areasResponse, formStatusResponse] = await Promise.all([
-          axios.get('https://pint-backend-5gz8.onrender.com/user/list'),
-          axios.get('https://pint-backend-5gz8.onrender.com/area/list'),
-          axios.get('https://pint-backend-5gz8.onrender.com/formularios/status/2')
+          axios.get('https://pintfinal-backend.onrender.com/user/list'),
+          axios.get('https://pintfinal-backend.onrender.com/area/list'),
+          axios.get('https://pintfinal-backend.onrender.com/formularios/status/2')
         ]);
         setUtilizadores(utilizadoresResponse.data);
         setAreas(areasResponse.data);
@@ -108,7 +108,7 @@ const CriarEvento = () => {
       return;
     }
 
-    axios.get('https://pint-backend-5gz8.onrender.com/user/profile', {
+    axios.get('https://pintfinal-backend.onrender.com/user/profile', {
       headers: {
         'x-auth-token': token
       }
@@ -133,7 +133,7 @@ const CriarEvento = () => {
 
   const fetchSubAreas = async (areaId) => {
     try {
-      const response = await axios.get(`https://pint-backend-5gz8.onrender.com/subarea/list/${areaId}`);
+      const response = await axios.get(`https://pintfinal-backend.onrender.com/subarea/list/${areaId}`);
       setSubAreas(response.data); // Atualiza com as novas subáreas
     } catch (error) {
       setSubAreas([]); // Limpa as subáreas se a área não tiver subáreas
@@ -170,16 +170,17 @@ const CriarEvento = () => {
   const dataAtual = new Date().toISOString().split('T')[0];
 
   const handleFileChange = (e) => {
-    setFormValues({
-      ...formValues,
-      foto: e.target.files[0]
-    });
+    const file = e.target.files[0];
+    setFormValues(prevFormValues => ({
+      ...prevFormValues,
+      foto: file
+    }));
   };
 
   const checkAndCreateSubArea = async () => {
     try {
       if (showNewSubArea && formValues.NEW_SUB_AREA) {
-        const response = await axios.post('https://pint-backend-5gz8.onrender.com/subarea/check', {
+        const response = await axios.post('https://pintfinal-backend.onrender.com/subarea/check', {
           subArea: formValues.NEW_SUB_AREA,
           ID_AREA: formValues.ID_AREA
         });
@@ -213,7 +214,7 @@ const CriarEvento = () => {
       formData.append('ID_AREA', formValues.ID_AREA);
       formData.append('ID_SUB_AREA', subAreaId ? subAreaId : '');
 
-      const eventoResponse = await axios.post('https://pint-backend-5gz8.onrender.com/evento/create', formData, {
+      const eventoResponse = await axios.post('https://pintfinal-backend.onrender.com/evento/create', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -270,17 +271,17 @@ const CriarEvento = () => {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="DATA_EVENTO" className="form-label">Data do Evento</label>
+          <label htmlFor="DATA_EVENTO" className="form-label">Data e Hora do Evento</label>
           <input
-            type="date"
+            type="datetime-local"
             id="DATA_EVENTO"
             name="DATA_EVENTO"
             className="form-control"
             value={formValues.DATA_EVENTO}
             onChange={handleInputChange}
-            min={dataAtual}
             required
-            disabled={!isFormActive} // Desabilita se o formulário estiver inativo
+            disabled={!isFormActive}
+            min={dataAtual}  // Define a data e hora mínimas como a data e hora atuais
           />
         </div>
 
