@@ -228,9 +228,9 @@ const Dashboard = () => {
       </h1>
       {error && <p className="error-message">Error: {error}</p>}
 
-      {/* Adição dos botões em formato de card */}
       <div className="row mt-4">
-        <div className="col-md-3">
+        {/* Primeira linha com 3 cards */}
+        <div className="col-md-4">
           <a href="/comentariosinv" className="card shadow-sm text-decoration-none">
             <div className="card-body text-center">
               <h5 className="card-title">Validar Comentários</h5>
@@ -238,7 +238,7 @@ const Dashboard = () => {
             </div>
           </a>
         </div>
-        <div className="col-md-3">
+        <div className="col-md-4">
           <a href="/comentariosinvlocal" className="card shadow-sm text-decoration-none">
             <div className="card-body text-center">
               <h5 className="card-title">Validar Comentários</h5>
@@ -246,7 +246,7 @@ const Dashboard = () => {
             </div>
           </a>
         </div>
-        <div className="col-md-3">
+        <div className="col-md-4">
           <a href="/reportLocais" className="card shadow-sm text-decoration-none">
             <div className="card-body text-center">
               <h5 className="card-title">Validar Comentários</h5>
@@ -254,7 +254,11 @@ const Dashboard = () => {
             </div>
           </a>
         </div>
-        <div className="col-md-3">
+      </div>
+
+      <div className="row mt-4 justify-content-center">
+        {/* Segunda linha com 2 cards centralizados */}
+        <div className="col-md-4 mx-auto">
           <a href="/reportEventos" className="card shadow-sm text-decoration-none">
             <div className="card-body text-center">
               <h5 className="card-title">Reports em Comentários</h5>
@@ -262,15 +266,7 @@ const Dashboard = () => {
             </div>
           </a>
         </div>
-        <div className="col-md-3">
-          <a href="/reportLocais" className="card shadow-sm text-decoration-none">
-            <div className="card-body text-center">
-              <h5 className="card-title">Reports em Comentários</h5>
-              <p className="card-text">Locais</p>
-            </div>
-          </a>
-        </div>
-        <div className="col-md-3">
+        <div className="col-md-4 mx-auto">
           <a href="/reportLocais" className="card shadow-sm text-decoration-none">
             <div className="card-body text-center">
               <h5 className="card-title">Reports em Comentários</h5>
