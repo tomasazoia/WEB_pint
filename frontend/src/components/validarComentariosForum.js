@@ -13,7 +13,7 @@ const ComentariosNaoValidadosForum = () => {
 
     const fetchComentarios = async () => {
         try {
-            const comentariosResponse = await axios.get(`https://pintfinal-backend.onrender.com/comentarios_forum/listforuminvalido`);
+            const comentariosResponse = await axios.get(`http://localhost:3000/comentarios_forum/listforuminvalido`);
             setComentarios(comentariosResponse.data);
         } catch (error) {
             console.error('Erro ao listar comentários não validados:', error);
@@ -23,7 +23,7 @@ const ComentariosNaoValidadosForum = () => {
 
     const deleteComentario = async (id) => {
         try {
-            await axios.delete(`https://pintfinal-backend.onrender.com/comentarios_forum/delete/${id}`, {
+            await axios.delete(`http://localhost:3000/comentarios_forum/delete/${id}`, {
                 headers: {
                     'x-auth-token': sessionStorage.getItem('token')
                 }
@@ -61,13 +61,13 @@ const ComentariosNaoValidadosForum = () => {
 
     const validarComentario = async (comentarioId) => {
         try {
-            await axios.put(`https://pintfinal-backend.onrender.com/comentarios_forum/validar/${comentarioId}`);
+            await axios.put(`http://localhost:3000/comentarios_forum/validar/${comentarioId}`);
             Swal.fire({
                 icon: 'success',
                 title: 'Validado!',
                 text: 'O comentário foi validado com sucesso.'
             });
-            fetchComentarios(); 
+            fetchComentarios();
         } catch (error) {
             Swal.fire({
                 icon: 'error',

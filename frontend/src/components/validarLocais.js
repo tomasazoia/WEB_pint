@@ -21,7 +21,7 @@ const LocaisNaoValidados = () => {
         }
 
         try {
-            const userResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
+            const userResponse = await axios.get('http://localhost:3000/user/profile', {
                 headers: {
                     'x-auth-token': token
                 }
@@ -33,7 +33,7 @@ const LocaisNaoValidados = () => {
                 return;
             }
 
-            const locaisResponse = await axios.get(`https://pintfinal-backend.onrender.com/locais/invalid/user/${userResponse.data.ID_FUNCIONARIO}/centro`, {
+            const locaisResponse = await axios.get(`http://localhost:3000/locais/invalid/user/${userResponse.data.ID_FUNCIONARIO}/centro`, {
                 headers: {
                     'x-auth-token': token
                 }
@@ -55,7 +55,7 @@ const LocaisNaoValidados = () => {
     };
     const deleteLocal = async (id) => {
         try {
-            await axios.delete(`https://pintfinal-backend.onrender.com/locais/delete/${id}`, {
+            await axios.delete(`http://localhost:3000/locais/delete/${id}`, {
                 headers: {
                     'x-auth-token': sessionStorage.getItem('token')  // Incluir o token na requisição de deleção
                 }
@@ -110,9 +110,9 @@ const LocaisNaoValidados = () => {
 
     const validarLocal = async (localId) => {
         try {
-            await axios.put(`https://pintfinal-backend.onrender.com/locais/validate/${localId}`);
+            await axios.put(`http://localhost:3000/locais/validate/${localId}`);
             alert('Local validado com sucesso!');
-            fetchLocais(); 
+            fetchLocais();
         } catch (error) {
             alert('Erro ao validar local: ' + (error.response?.data?.message || 'Erro desconhecido.'));
         }
@@ -141,7 +141,7 @@ const LocaisNaoValidados = () => {
                             <tr key={local.ID_LOCAL}>
                                 <td>{local.ID_LOCAL}</td>
                                 <td>{local.DESIGNACAO_LOCAL}</td>
-                            <td>{local.cidade}</td>
+                                <td>{local.cidade}</td>
                                 <td>{local.REVIEW}</td>
                                 <td>{local.PRECO}</td>
                                 <td>{local.area.NOME_AREA}</td>

@@ -23,14 +23,14 @@ const CalendarioEventos = () => {
             const token = sessionStorage.getItem('token');
             if (!token) throw new Error('Token de autenticação não encontrado.');
 
-            const userProfileResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
+            const userProfileResponse = await axios.get('http://localhost:3000/user/profile', {
                 headers: { 'x-auth-token': token }
             });
 
             const userId = userProfileResponse.data.ID_FUNCIONARIO;
             if (!userId) throw new Error('Erro ao obter dados do usuário ou centro.');
 
-            const response = await axios.get(`https://pintfinal-backend.onrender.com/evento/listdispcal/${userId}`);
+            const response = await axios.get(`http://localhost:3000/evento/listdispcal/${userId}`);
             const eventosFormatados = response.data.map(evento => ({
                 id: evento.ID_EVENTO,
                 title: evento.NOME_EVENTO,

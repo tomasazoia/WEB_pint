@@ -21,7 +21,7 @@ const ReportsView = () => {
                 if (!token) throw new Error('Token de autenticação não encontrado.');
 
                 // Fazendo a solicitação para obter o perfil do usuário autenticado
-                const userProfileResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
+                const userProfileResponse = await axios.get('http://localhost:3000/user/profile', {
                     headers: {
                         'x-auth-token': token
                     }
@@ -49,7 +49,7 @@ const ReportsView = () => {
                 return;
             }
 
-            const response = await axios.get(`https://pintfinal-backend.onrender.com/reportlocais/list`, {
+            const response = await axios.get(`http://localhost:3000/reportlocais/list`, {
                 headers: {
                     'x-auth-token': token,
                     'user-id': userId // Inclui o ID do usuário nos cabeçalhos para o filtro no backend
@@ -71,7 +71,7 @@ const ReportsView = () => {
                 return;
             }
 
-            await axios.delete(`https://pintfinal-backend.onrender.com/reportlocais/delete/${id}`, {
+            await axios.delete(`http://localhost:3000/reportlocais/delete/${id}`, {
                 headers: {
                     'x-auth-token': token,
                 },

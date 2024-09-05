@@ -36,9 +36,9 @@ const AddLocal = () => {
   useEffect(() => {
     const fetchAreas = async () => {
       try {
-        const response = await axios.get('https://pintfinal-backend.onrender.com/area/list');
+        const response = await axios.get('http://localhost:3000/area/list');
         setAreas(response.data);
-        const formStatusResponse = await axios.get('https://pintfinal-backend.onrender.com/formularios/status/3');
+        const formStatusResponse = await axios.get('http://localhost:3000/formularios/status/3');
         setIsFormActive(formStatusResponse.data.ATIVO);
       } catch (error) {
         console.error('Erro ao carregar áreas:', error);
@@ -55,7 +55,7 @@ const AddLocal = () => {
         const token = sessionStorage.getItem('token');
         if (!token) throw new Error('Token de autenticação não encontrado');
 
-        const response = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
+        const response = await axios.get('http://localhost:3000/user/profile', {
           headers: {
             'x-auth-token': token
           }
@@ -121,7 +121,7 @@ const AddLocal = () => {
     const fetchSubAreas = async () => {
       if (formValues.ID_AREA) {
         try {
-          const response = await axios.get(`https://pintfinal-backend.onrender.com/subarea/list/${formValues.ID_AREA}`);
+          const response = await axios.get(`http://localhost:3000/subarea/list/${formValues.ID_AREA}`);
           setSubAreas(response.data);
         } catch (error) {
           console.error('Nao existem subareas para a area selecionada:', error);
@@ -173,7 +173,7 @@ const AddLocal = () => {
     }
 
     try {
-      const response = await axios.post('https://pintfinal-backend.onrender.com/subarea/check', {
+      const response = await axios.post('http://localhost:3000/subarea/check', {
         subArea: formValues.NOVA_SUB_AREA,
         ID_AREA: formValues.ID_AREA
       });
@@ -205,7 +205,7 @@ const AddLocal = () => {
       formData.append('ID_AREA', formValues.ID_AREA);
       formData.append('ID_SUB_AREA', subAreaId ? subAreaId : '');
 
-      const response = await axios.post('https://pintfinal-backend.onrender.com/locais/create', formData, {
+      const response = await axios.post('http://localhost:3000/locais/create', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -214,7 +214,7 @@ const AddLocal = () => {
       const createdLocalId = response.data.ID_LOCAL;
 
       if (formValues.REVIEW) {
-        await axios.post('https://pintfinal-backend.onrender.com/review/create', {
+        await axios.post('http://localhost:3000/review/create', {
           ID_CRIADOR: formValues.ID_CRIADOR,
           REVIEW: formValues.REVIEW,
           ID_LOCAL: createdLocalId,

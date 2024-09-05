@@ -122,7 +122,7 @@ const Navbar = () => {
               <Link className="nav-link text-dark" to="/centro/list">
                 Centros
               </Link>
-            </li>            
+            </li>
 
             {/* Estabelecimentos */}
             <li className="nav-item dropdown">

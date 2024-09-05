@@ -21,7 +21,7 @@ const Utilizadores = () => {
     }
 
     try {
-      const userResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
+      const userResponse = await axios.get('http://localhost:3000/user/profile', {
         headers: {
           'x-auth-token': token
         }
@@ -34,7 +34,7 @@ const Utilizadores = () => {
         return;
       }
 
-      const usersResponse = await axios.get(`https://pintfinal-backend.onrender.com/user/listvalidados/${userResponse.data.ID_FUNCIONARIO}`, {
+      const usersResponse = await axios.get(`http://localhost:3000/user/listvalidados/${userResponse.data.ID_FUNCIONARIO}`, {
         headers: {
           'x-auth-token': token
         }
@@ -56,7 +56,7 @@ const Utilizadores = () => {
       return;
     }
 
-    axios.put(`https://pintfinal-backend.onrender.com/user/invalidar/${userId}`, {}, {
+    axios.put(`http://localhost:3000/user/invalidar/${userId}`, {}, {
       headers: {
         'x-auth-token': token
       }
@@ -81,14 +81,14 @@ const Utilizadores = () => {
 
     try {
       if (isAdmin) {
-        await axios.put(`https://pintfinal-backend.onrender.com/user/unadmin/${userId}`, {}, {
+        await axios.put(`http://localhost:3000/user/unadmin/${userId}`, {}, {
           headers: {
             'x-auth-token': token
           }
         });
         alert('Utilizador rebaixado para usuário normal com sucesso!');
       } else {
-        await axios.put(`https://pintfinal-backend.onrender.com/user/admin/${userId}`, {}, {
+        await axios.put(`http://localhost:3000/user/admin/${userId}`, {}, {
           headers: {
             'x-auth-token': token
           }

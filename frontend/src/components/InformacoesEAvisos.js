@@ -29,7 +29,7 @@ const InformacoesView = () => {
     }
 
     try {
-      const response = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
+      const response = await axios.get('http://localhost:3000/user/profile', {
         headers: {
           'x-auth-token': token,
         },
@@ -46,7 +46,7 @@ const InformacoesView = () => {
 
   const fetchInformacoes = async () => {
     try {
-      const response = await axios.get('https://pintfinal-backend.onrender.com/infos/list', {
+      const response = await axios.get('http://localhost:3000/infos/list', {
         headers: {
           'x-auth-token': token,
         },
@@ -59,7 +59,7 @@ const InformacoesView = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://pintfinal-backend.onrender.com/infos/delete/${id}`, {
+      await axios.delete(`http://localhost:3000/infos/delete/${id}`, {
         headers: {
           'x-auth-token': token,
         },
@@ -75,7 +75,7 @@ const InformacoesView = () => {
       if (editingInfo) {
         // Editar Informação
         await axios.put(
-          `https://pintfinal-backend.onrender.com/infos/update/${editingInfo.ID_INFORMACAO}`,
+          `http://localhost:3000/infos/update/${editingInfo.ID_INFORMACAO}`,
           newInfo,
           {
             headers: {
@@ -85,7 +85,7 @@ const InformacoesView = () => {
         );
       } else {
         // Criar Nova Informação
-        await axios.post('https://pintfinal-backend.onrender.com/infos/create', newInfo, {
+        await axios.post('http://localhost:3000/infos/create', newInfo, {
           headers: {
             'x-auth-token': token,
           },

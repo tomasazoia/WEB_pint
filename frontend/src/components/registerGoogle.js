@@ -28,7 +28,7 @@ const Perfil = () => {
     // Buscar os centros disponíveis
     const fetchCentros = async () => {
       try {
-        const response = await axios.get('https://pintfinal-backend.onrender.com/centro/list');
+        const response = await axios.get('http://localhost:3000/centro/list');
         setCentros(response.data);
       } catch (error) {
         console.error('Erro ao buscar centros:', error);
@@ -57,7 +57,7 @@ const Perfil = () => {
 
     try {
       // Atualizar os dados do perfil
-      await axios.put('https://pintfinal-backend.onrender.com/user/profileup', {
+      await axios.put('http://localhost:3000/user/profileup', {
         NIF: formData.NIF,
         MORADA: formData.MORADA,
         NTELEMOVEL: formData.NTELEMOVEL
@@ -66,7 +66,7 @@ const Perfil = () => {
       });
 
       // Atualizar o centro
-      await axios.put('https://pintfinal-backend.onrender.com/user/updateCentro', {
+      await axios.put('http://localhost:3000/user/updateCentro', {
         ID_CENTRO: formData.ID_CENTRO
       }, {
         headers: { 'x-auth-token': token }

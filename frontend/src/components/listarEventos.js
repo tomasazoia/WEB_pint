@@ -18,7 +18,7 @@ const ListarEventos = () => {
             const token = sessionStorage.getItem('token');
             if (!token) throw new Error('Token de autenticação não encontrado.');
 
-            const userProfileResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
+            const userProfileResponse = await axios.get('http://localhost:3000/user/profile', {
                 headers: {
                     'x-auth-token': token
                 }
@@ -27,7 +27,7 @@ const ListarEventos = () => {
             const userId = userProfileResponse.data.ID_FUNCIONARIO;
             if (!userId) throw new Error('Erro ao obter dados do usuário.');
 
-            const response = await axios.get(`https://pintfinal-backend.onrender.com/evento/listdisp/${userId}`);
+            const response = await axios.get(`http://localhost:3000/evento/listdisp/${userId}`);
             
             const eventosComCidades = await Promise.all(
                 response.data.map(async (evento) => {
@@ -64,6 +64,37 @@ const ListarEventos = () => {
         }
     };
 
+    const handleInvalidarEvento = async (eventoId) => {
+        try {
+            const confirmResult = await Swal.fire({
+                title: 'Tem certeza?',
+                text: "Deseja realmente invalidar este evento?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, invalidar!'
+            });
+
+            if (confirmResult.isConfirmed) {
+                await axios.put(`http://localhost:3000/evento/invalidate/${eventoId}`);
+                Swal.fire(
+                    'Invalidado!',
+                    'O evento foi invalidado com sucesso.',
+                    'success'
+                );
+                loadEventos(); // Atualiza a lista de eventos após a invalidação
+            }
+        } catch (error) {
+            console.error('Erro ao invalidar evento:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: 'Erro ao invalidar o evento.',
+            });
+        }
+    };
+
     return (
         <div className="container">
             <h1>Lista de Eventos</h1>
@@ -77,7 +108,7 @@ const ListarEventos = () => {
                             <Link to={`/evento/get/${evento.ID_EVENTO}`}>
                                 {evento.foto && (
                                     <img
-                                        src={`https://pintfinal-backend.onrender.com/${evento.foto}`}
+                                        src={`http://localhost:3000/${evento.foto}`}
                                         className="card-img-top img-evento"
                                         alt={evento.NOME_EVENTO}
                                     />
@@ -92,11 +123,28 @@ const ListarEventos = () => {
                                 <p className="card-text flex-grow-1"><strong>Sub Área do evento: </strong>{evento.sub_area ? evento.sub_area.NOME_SUBAREA : "Sub Área não associada"}</p>
                                 <p className="card-text">
                                     <small className="text-muted">
-                                        Data: {new Date(evento.DATA_EVENTO).toLocaleDateString()}
+                                        Data: {new Date(evento.DATA_EVENTO).toLocaleString('pt-BR', {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            hour12: true
+                                        })}
                                     </small>
                                 </p>
+
+                                {/* Botão de Invalidar Evento */}
+                                <button 
+                                    onClick={() => handleInvalidarEvento(evento.ID_EVENTO)} 
+                                    className="btn btn-danger mb-2"
+                                >
+                                    Invalidar Evento
+                                </button>
+
+                                {/* Botão de Editar Evento */}
                                 <Link to={`/eventos/edit/${evento.ID_EVENTO}`} className="btn btn-warning mt-2" style={{ color: 'white' }}>
-                                Editar Evento
+                                    Editar Evento
                                 </Link>
                             </div>
                             

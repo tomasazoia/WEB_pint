@@ -38,20 +38,20 @@ const DetalhesEvento = () => {
 
         const fetchData = async () => {
             try {
-                const userResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
+                const userResponse = await axios.get('http://localhost:3000/user/profile', {
                     headers: { 'x-auth-token': token }
                 });
                 userRef.current = userResponse.data;
 
-                const eventoResponse = await axios.get(`https://pintfinal-backend.onrender.com/evento/get/${id}`);
+                const eventoResponse = await axios.get(`http://localhost:3000/evento/get/${id}`);
                 eventoRef.current = eventoResponse.data;
                 setEvento(eventoResponse.data);
                 setNParticipantes(eventoResponse.data.N_PARTICIPANTES);
-                const participantesResponse = await axios.get(`https://pintfinal-backend.onrender.com/participantesevento/eventos/${id}/participantes`);
+                const participantesResponse = await axios.get(`http://localhost:3000/participantesevento/eventos/${id}/participantes`);
                 setParticipantes(participantesResponse.data);
                 const isParticipating = participantesResponse.data.some(participante => participante.User.ID_FUNCIONARIO === userRef.current.ID_FUNCIONARIO);
                 setParticipando(isParticipating);
-                const comentariosResponse = await axios.get(`https://pintfinal-backend.onrender.com/comentarios_evento/listevento/${id}`);
+                const comentariosResponse = await axios.get(`http://localhost:3000/comentarios_evento/listevento/${id}`);
                 setComentarios(comentariosResponse.data);
             } catch (error) {
                 console.error('Erro ao carregar dados:', error);
@@ -102,7 +102,7 @@ const DetalhesEvento = () => {
                 ID_EVENTO: evento.ID_EVENTO,
             };
 
-            await axios.post('https://pintfinal-backend.onrender.com/comentarios_evento/create', comentarioData);
+            await axios.post('http://localhost:3000/comentarios_evento/create', comentarioData);
 
             setNovoComentario('');
 
@@ -113,7 +113,7 @@ const DetalhesEvento = () => {
                 confirmButtonText: 'OK',
             });
 
-            const comentariosResponse = await axios.get(`https://pintfinal-backend.onrender.com/comentarios_evento/listevento/${id}`);
+            const comentariosResponse = await axios.get(`http://localhost:3000/comentarios_evento/listevento/${id}`);
             setComentarios(comentariosResponse.data);
         } catch (error) {
             console.error('Erro ao adicionar comentário:', error);
@@ -124,7 +124,7 @@ const DetalhesEvento = () => {
 
     const handleDeleteComentario = async (idComentario) => {
         try {
-            await axios.put(`https://pintfinal-backend.onrender.com/comentarios_evento/invalidar/${idComentario}`);
+            await axios.put(`http://localhost:3000/comentarios_evento/invalidar/${idComentario}`);
 
             setComentarios(prevComentarios => prevComentarios.filter(comentario => comentario.ID_COMENTARIO !== idComentario));
         } catch (error) {
@@ -146,7 +146,7 @@ const DetalhesEvento = () => {
                 ID_EVENTO: evento.ID_EVENTO,
             };
 
-            await axios.post('https://pintfinal-backend.onrender.com/participantesevento/participantes', participanteData);
+            await axios.post('http://localhost:3000/participantesevento/participantes', participanteData);
 
             setParticipando(true);
             setNParticipantes(prev => prev - 1);
@@ -164,7 +164,7 @@ const DetalhesEvento = () => {
         }
 
         try {
-            await axios.delete(`https://pintfinal-backend.onrender.com/participantesevento/participantesdelete/${userRef.current.ID_FUNCIONARIO}/${evento.ID_EVENTO}`);
+            await axios.delete(`http://localhost:3000/participantesevento/participantesdelete/${userRef.current.ID_FUNCIONARIO}/${evento.ID_EVENTO}`);
 
             setParticipando(false);
             setNParticipantes(prev => prev + 1);
@@ -184,7 +184,7 @@ const DetalhesEvento = () => {
                         <div className="col-md-6 d-flex align-items-center justify-content-center">
                             {evento.foto ? (
                                 <img
-                                    src={`https://pintfinal-backend.onrender.com/${evento.foto}`}
+                                    src={`http://localhost:3000/${evento.foto}`}
                                     alt={evento.NOME_EVENTO}
                                     className="img-fluid rounded-start img-fixa-evento-detalhes"
                                 />

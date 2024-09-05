@@ -45,9 +45,9 @@ const CriarEvento = () => {
     const fetchData = async () => {
       try {
         const [utilizadoresResponse, areasResponse, formStatusResponse] = await Promise.all([
-          axios.get('https://pintfinal-backend.onrender.com/user/list'),
-          axios.get('https://pintfinal-backend.onrender.com/area/list'),
-          axios.get('https://pintfinal-backend.onrender.com/formularios/status/2')
+          axios.get('http://localhost:3000/user/list'),
+          axios.get('http://localhost:3000/area/list'),
+          axios.get('http://localhost:3000/formularios/status/2')
         ]);
         setUtilizadores(utilizadoresResponse.data);
         setAreas(areasResponse.data);
@@ -108,7 +108,7 @@ const CriarEvento = () => {
       return;
     }
 
-    axios.get('https://pintfinal-backend.onrender.com/user/profile', {
+    axios.get('http://localhost:3000/user/profile', {
       headers: {
         'x-auth-token': token
       }
@@ -133,7 +133,7 @@ const CriarEvento = () => {
 
   const fetchSubAreas = async (areaId) => {
     try {
-      const response = await axios.get(`https://pintfinal-backend.onrender.com/subarea/list/${areaId}`);
+      const response = await axios.get(`http://localhost:3000/subarea/list/${areaId}`);
       setSubAreas(response.data); // Atualiza com as novas subáreas
     } catch (error) {
       setSubAreas([]); // Limpa as subáreas se a área não tiver subáreas
@@ -153,7 +153,7 @@ const CriarEvento = () => {
         ...prevFormValues,
         [name]: type === 'checkbox' ? checked : value
       };
-  
+
       // Reseta o campo de subárea e nova subárea quando a área é alterada
       if (name === 'ID_AREA') {
         setSubAreas([]); // Limpa as subáreas antes de buscar novas
@@ -162,7 +162,7 @@ const CriarEvento = () => {
         updatedFormValues.NEW_SUB_AREA = '';
         setShowNewSubArea(false);
       }
-  
+
       return updatedFormValues;
     });
   };
@@ -180,7 +180,7 @@ const CriarEvento = () => {
   const checkAndCreateSubArea = async () => {
     try {
       if (showNewSubArea && formValues.NEW_SUB_AREA) {
-        const response = await axios.post('https://pintfinal-backend.onrender.com/subarea/check', {
+        const response = await axios.post('http://localhost:3000/subarea/check', {
           subArea: formValues.NEW_SUB_AREA,
           ID_AREA: formValues.ID_AREA
         });
@@ -214,7 +214,7 @@ const CriarEvento = () => {
       formData.append('ID_AREA', formValues.ID_AREA);
       formData.append('ID_SUB_AREA', subAreaId ? subAreaId : '');
 
-      const eventoResponse = await axios.post('https://pintfinal-backend.onrender.com/evento/create', formData, {
+      const eventoResponse = await axios.post('http://localhost:3000/evento/create', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

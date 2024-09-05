@@ -22,14 +22,14 @@ const LocaisPorSubArea = () => {
 
             try {
                 // Obter o ID do utilizador autenticado
-                const userResponse = await axios.get('https://pintfinal-backend.onrender.com/user/profile', {
+                const userResponse = await axios.get('http://localhost:3000/user/profile', {
                     headers: {
                         'x-auth-token': token
                     }
                 });
                 const userId = userResponse.data.ID_FUNCIONARIO;
                 
-                const response = await axios.get(`https://pintfinal-backend.onrender.com/locais/subarea/${subAreaId}/user/${userId}`);
+                const response = await axios.get(`http://localhost:3000/locais/subarea/${subAreaId}/user/${userId}`);
                 setLocais(response.data);
             } catch (error) {
                 console.error('Nenhuma recomendacao encontrada:', error);
@@ -42,7 +42,7 @@ const LocaisPorSubArea = () => {
 
     const deleteLocal = async (id) => {
         try {
-            await axios.put(`https://pintfinal-backend.onrender.com/locais/invalidate/${id}`, {
+            await axios.put(`http://localhost:3000/locais/invalidate/${id}`, {
                 headers: {
                     'x-auth-token': sessionStorage.getItem('token')  // Incluir o token na requisição de deleção
                 }
@@ -103,7 +103,7 @@ const LocaisPorSubArea = () => {
                             <Link to={`/locais/get/${local.ID_LOCAL}`}>
                                 {local.foto && (
                                     <img
-                                        src={`https://pintfinal-backend.onrender.com/${local.foto}`}
+                                        src={`http://localhost:3000/${local.foto}`}
                                         className="card-img-top img-fixa-locais-lista"
                                         alt={local.DESIGNACAO_LOCAL}
                                     />
