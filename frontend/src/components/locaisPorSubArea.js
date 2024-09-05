@@ -95,6 +95,23 @@ const LocaisPorSubArea = () => {
         });
     };
 
+    const getCityFromCoordinates = async (coordinates) => {
+        const [latitude, longitude] = coordinates.split(',').map(coord => coord.trim());
+        try {
+          const response = await axios.get('https://nominatim.openstreetmap.org/reverse', {
+            params: {
+              lat: latitude,
+              lon: longitude,
+              format: 'json'
+            }
+          });
+          return response.data.address.city || response.data.address.town || response.data.address.village || 'Cidade Desconhecida';
+        } catch (error) {
+          console.error('Erro ao obter cidade das coordenadas:', error);
+          return 'Cidade Desconhecida';
+        }
+      };
+
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating);
         const halfStars = rating % 1 >= 0.5 ? 1 : 0;
