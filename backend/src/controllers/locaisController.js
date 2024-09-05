@@ -10,6 +10,7 @@ const subarea = require('../models/subArea');
 const Notificacoes = require('../models/notificacoes');
 const userPreferences = require('../models/userPreferences');
 const { Storage } = require('@google-cloud/storage');
+const fs = require('fs'); // Importando o módulo fs
 
 // Função para criar um novo local
 const createLocal = async (req, res) => {
