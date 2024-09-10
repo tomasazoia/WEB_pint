@@ -207,7 +207,7 @@ const Login = () => {
 
               </form>
               <p className="mt-3 text-center">
-                Não tem uma conta? <Link to="/register">Registrar</Link>
+                Não tem uma conta? <Link to="/register">Registar</Link>
               </p>
               <p className="mt-3 text-center">
                 Esqueceu-se da palavra-passe? <Link to="/forgot-password">Recuperar</Link>

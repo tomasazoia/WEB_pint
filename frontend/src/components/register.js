@@ -69,7 +69,7 @@ const Registar = () => {
         navigate('/login');
       }, 2000);
     } catch (error) {
-      setErrorMessage('Erro ao registrar utilizador. Tente novamente.');
+      setErrorMessage('Erro ao Registar utilizador. Tente novamente.');
     }
   };
 
@@ -80,7 +80,7 @@ const Registar = () => {
           <div className="card">
             <img src="/logotipo-softinsa.png" alt="Logotipo Softinsa" style={{ width: '40%', marginLeft: '28%' }} />
             <div className="card-body p-4">
-              <h2 className="text-center mb-4">Registrar</h2>
+              <h2 className="text-center mb-4">Registar</h2>
               <form onSubmit={handleRegister}>
                 <div className="mb-3">
                   <label htmlFor="name" className="form-label">
@@ -176,7 +176,7 @@ const Registar = () => {
                 </div>
                 {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                 {successMessage && <div className="alert alert-success">{successMessage}</div>}
-                <button type="submit" className="btn btn-primary w-100">Registrar</button>
+                <button type="submit" className="btn btn-primary w-100">Registar</button>
               </form>
               <p className="mt-3 text-center">
                 Já tem uma conta? <Link to="/login">Voltar ao Login</Link>

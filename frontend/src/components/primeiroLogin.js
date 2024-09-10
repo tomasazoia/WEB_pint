@@ -72,7 +72,7 @@ const ChangePassword = () => {
         <div className="card-body">
           <form onSubmit={handleChangePassword}>
             <div className="mb-3">
-              <label htmlFor="oldPassword" className="form-label"><FontAwesomeIcon icon={faLock} /> palavra-passe Temporária:</label>
+              <label htmlFor="oldPassword" className="form-label"><FontAwesomeIcon icon={faLock} /> Palavra-passe Temporária:</label>
               <input
                 type="password"
                 id="oldPassword"
