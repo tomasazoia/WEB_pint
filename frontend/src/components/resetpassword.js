@@ -19,7 +19,7 @@ const ChangePassword = () => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      setError('As novas senhas não coincidem.');
+      setError('As novas palavra-passes não coincidem.');
       setMessage('');
       return;
     }
@@ -36,12 +36,12 @@ const ChangePassword = () => {
         }
       });
 
-      setMessage(response.data.message || 'Senha alterada com sucesso.');
+      setMessage(response.data.message || 'palavra-passe alterada com sucesso.');
       setError('');
       Swal.fire({
         icon: 'success',
         title: 'Sucesso',
-        text: 'Senha alterada com sucesso!',
+        text: 'palavra-passe alterada com sucesso!',
         confirmButtonText: 'OK'
       });
       navigate('/dashboard');
@@ -51,12 +51,12 @@ const ChangePassword = () => {
       setNewPassword('');
       setConfirmPassword('');
     } catch (err) {
-      setError(err.response?.data?.message || 'Erro ao alterar a senha.');
+      setError(err.response?.data?.message || 'Erro ao alterar a palavra-passe.');
       setMessage('');
       Swal.fire({
         icon: 'error',
         title: 'Erro',
-        text: err.response?.data?.message || 'Erro ao alterar a senha.',
+        text: err.response?.data?.message || 'Erro ao alterar a palavra-passe.',
         confirmButtonText: 'OK'
       });
     }
@@ -67,12 +67,12 @@ const ChangePassword = () => {
       <div className="card shadow-lg p-4 mb-5 bg-white rounded">
         <div className="card-header bg-primary text-white text-center">
           <FontAwesomeIcon icon={faLock} size="3x" />
-          <h2 className="mt-3 text-white">Mudar Senha</h2>
+          <h2 className="mt-3 text-white">Mudar palavra-passe</h2>
         </div>
         <div className="card-body">
           <form onSubmit={handleChangePassword}>
             <div className="mb-3">
-              <label htmlFor="oldPassword" className="form-label"><FontAwesomeIcon icon={faLock} /> Senha Antiga:</label>
+              <label htmlFor="oldPassword" className="form-label"><FontAwesomeIcon icon={faLock} /> palavra-passe Antiga:</label>
               <input
                 type="password"
                 id="oldPassword"
@@ -83,7 +83,7 @@ const ChangePassword = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="newPassword" className="form-label"><FontAwesomeIcon icon={faLock} /> Nova Senha:</label>
+              <label htmlFor="newPassword" className="form-label"><FontAwesomeIcon icon={faLock} /> Nova palavra-passe:</label>
               <input
                 type="password"
                 id="newPassword"
@@ -94,7 +94,7 @@ const ChangePassword = () => {
               />
             </div>
             <div className="mb-3">
-              <label htmlFor="confirmPassword" className="form-label"><FontAwesomeIcon icon={faLock} /> Confirmar Nova Senha:</label>
+              <label htmlFor="confirmPassword" className="form-label"><FontAwesomeIcon icon={faLock} /> Confirmar Nova palavra-passe:</label>
               <input
                 type="password"
                 id="confirmPassword"
@@ -104,7 +104,7 @@ const ChangePassword = () => {
                 required
               />
             </div>
-            <button type="submit" className="btn btn-primary w-100 mb-3"><FontAwesomeIcon icon={faLock} /> Alterar Senha</button>
+            <button type="submit" className="btn btn-primary w-100 mb-3"><FontAwesomeIcon icon={faLock} /> Alterar palavra-passe</button>
           </form>
           {message && <div className="alert alert-success mt-3" role="alert">{message}</div>}
           {error && <div className="alert alert-danger mt-3" role="alert">{error}</div>}

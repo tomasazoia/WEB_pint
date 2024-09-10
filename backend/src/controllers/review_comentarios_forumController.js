@@ -84,7 +84,7 @@ exports.deleteReview = async (req, res) => {
 
 // Adicionar uma review a um comentário específico no fórum
 exports.addReviewToComentario = async (req, res) => {
-    const { ID_COMENTARIO } = req.params;
+    const { id: ID_COMENTARIO } = req.params;
     const { ID_CRIADOR, REVIEW } = req.body;
 
     try {

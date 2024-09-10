@@ -299,7 +299,7 @@ const Perfil = () => {
             style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }} // Ajustes inline para tamanho
           >
             <FontAwesomeIcon icon={faLock} className="me-2" />
-            Alterar Senha
+            Alterar palavra-passe
           </Link>
         </div>
 

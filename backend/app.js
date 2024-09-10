@@ -31,6 +31,9 @@ const comentarioLocal = require('./src/routes/comentarios_localRoute');
 const notificacoes = require('./src/routes/notificacoesRoute');
 const formularios = require('./src/routes/formulariosRoute');
 const infos = require('./src/routes/infosEAvisosRoute');
+const reviewComentariosEventoRoutes = require('./src/routes/review_comentarios_eventoRoute');
+const reviewComentariosForumRoutes = require('./src/routes/review_comentarios_forumRoute');
+const reviewComentariosLocalRoutes = require('./src/routes/review_comentarios_localRoute');
 
 const AlbumFotos = require('./src/models/albumFotos');
 const Area = require('./src/models/area');
@@ -93,7 +96,7 @@ const predefinedCentros = [
 const predefinedFormularios = [
   { ID_FORMULARIO: 1, NOME_FORMULARIO: 'Criar_Conta', ATIVO: true },
   { ID_FORMULARIO: 2, NOME_FORMULARIO: 'Criar_Evento', ATIVO: true },
-  { ID_FORMULARIO: 3, NOME_FORMULARIO: 'Criar_Local', ATIVO: true }
+  { ID_FORMULARIO: 3, NOME_FORMULARIO: 'Criar_Estabelecimento', ATIVO: true }
 ];
 
 const predefinedTopicosReport = [
@@ -200,6 +203,9 @@ app.use('/reporteventos', reportEventosRoutes);
 app.use('/reportforums', reportForumsRoutes);
 app.use('/reportlocais', reportLocaisRoutes);
 app.use('/infos', infos);
+app.use('/reviews_comentarios_evento', reviewComentariosEventoRoutes);
+app.use('/reviews_comentarios_forum', reviewComentariosForumRoutes);
+app.use('/reviews_comentarios_local', reviewComentariosLocalRoutes);
 
 syncDatabase();
 

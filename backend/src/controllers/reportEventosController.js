@@ -3,7 +3,7 @@ const ComentariosEvento = require('../models/comentarios_evento');
 const ReportTopicos = require('../models/reportTopicos');
 const Evento = require('../models/eventos');
 const Centro = require('../models/centro');
-const User = require('../models/users'); 
+const User = require('../models/users');
 
 // Criar um novo report
 const createReport = async (req, res) => {
@@ -41,17 +41,22 @@ const createReport = async (req, res) => {
 
 // Listar todos os reports
 const getAllReports = async (req, res) => {
-    const userId = req.headers['user-id']; // Extraindo o ID do usuário dos headers
+    const userId = req.headers['user-id'];// Extraindo o ID do usuário dos headers
 
     try {
         // Obter o centro do administrador
-        const admin = await User.findByPk(userId);
+        const user = await User.findByPk(userId);
 
-        if (!admin) {
-            return res.status(404).json({ error: 'Administrador não encontrado' });
+        if (!user) {
+            return res.status(404).json({ message: 'Utilizador não encontrado.' });
         }
 
-        const idCentro = admin.ID_CENTRO;
+        // Recuperar o ID do centro associado ao utilizador
+        const centroId = user.ID_CENTRO;
+
+        if (!centroId) {
+            return res.status(404).json({ message: 'Centro do utilizador não encontrado.' });
+        }
 
         // Buscar reports associados aos eventos que pertencem ao centro do administrador
         const reports = await ReportEventos.findAll({
@@ -60,12 +65,14 @@ const getAllReports = async (req, res) => {
                     model: ComentariosEvento,
                     attributes: ['ID_COMENTARIO', 'DESCRICAO'],
                     as: "comentariosevento",
-                    include: {
-                        model: Evento,
-                        attributes: ['ID_EVENTO', 'NOME_EVENTO'], 
-                        where: { ID_CENTRO: idCentro } ,
-                        as: "evento"
-                    }
+                    include: [
+                        {
+                            model: Evento,
+                            attributes: ['ID_EVENTO', 'NOME_EVENTO'],
+                            where: { ID_CENTRO: centroId }, // Filtra eventos pelo centro do usuário
+                            as: "evento"
+                        }
+                    ]
                 },
                 {
                     model: ReportTopicos,
@@ -81,6 +88,7 @@ const getAllReports = async (req, res) => {
         return res.status(500).json({ error: 'Erro ao listar os reports' });
     }
 };
+
 
 // Eliminar um report
 const deleteReport = async (req, res) => {

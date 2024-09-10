@@ -1,6 +1,8 @@
 const ReportForums = require('../models/reportForums');
 const ComentariosForum = require('../models/comentarios_forum');
 const ReportTopicos = require('../models/reportTopicos');
+const Forum = require('../models/forum');
+const User = require('../models/users');
 
 // Criar um novo report
 const createReport = async (req, res) => {
@@ -38,39 +40,41 @@ const createReport = async (req, res) => {
 
 // Listar todos os reports
 const getAllReports = async (req, res) => {
-    const userId = req.headers['user-id']; // Extraindo o ID do usuário dos headers
+    const userId = req.headers['user-id'];// Extraindo o ID do usuário dos headers
 
     try {
-        // Obter o centro do administrador
-        const admin = await User.findByPk(userId);
 
-        if (!admin) {
-            return res.status(404).json({ error: 'Administrador não encontrado' });
+        // Obter o centro do administrador
+        const user = await User.findByPk(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'Utilizador não encontrado.' });
         }
 
-        const idCentro = admin.ID_CENTRO;
+        // Recuperar o ID do centro associado ao utilizador
+        const centroId = user.ID_CENTRO;
 
-        // Buscar reports associados aos fóruns que pertencem ao centro do administrador
+        if (!centroId) {
+            return res.status(404).json({ message: 'Centro do utilizador não encontrado.' });
+        }
+
         const reports = await ReportForums.findAll({
             include: [
-                {
+                { 
                     model: ComentariosForum,
                     attributes: ['ID_COMENTARIO', 'DESCRICAO'],
-                    as: "comentariosforum",
                     include: {
                         model: Forum,
                         attributes: ['ID_FORUM', 'NOME_FORUM'],
-                        where: { ID_CENTRO: idCentro }, // Filtrar pelo centro do administrador
-                        as: "forum"
                     }
                 },
-                {
+                { 
                     model: ReportTopicos,
-                    attributes: ['ID_TOPICO', 'NOME_TOPICO'],
-                    as: "reporttopico"
+                    attributes: ['ID_TOPICO', 'NOME_TOPICO'] 
                 }
             ]
         });
+
 
         return res.status(200).json(reports);
     } catch (error) {
@@ -78,6 +82,7 @@ const getAllReports = async (req, res) => {
         return res.status(500).json({ error: 'Erro ao listar os reports' });
     }
 };
+
 // Eliminar um report
 const deleteReport = async (req, res) => {
     const { id } = req.params; // Recebe o ID do report dos parâmetros da URL

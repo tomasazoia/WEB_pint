@@ -144,7 +144,7 @@ const Dashboard = () => {
   };
 
   const localsOptions = {
-    title: 'Quantidade de Locais por Área',
+    title: 'Quantidade de Estabelecimentos por Área',
     hAxis: { title: 'Área', titleTextStyle: { color: '#333' } },
     vAxis: { minValue: 0 },
   };
@@ -242,7 +242,7 @@ const Dashboard = () => {
           <a href="/comentariosinvlocal" className="card shadow-sm text-decoration-none">
             <div className="card-body text-center">
               <h5 className="card-title">Validar Comentários</h5>
-              <p className="card-text">Locais</p>
+              <p className="card-text">Estabelecimentos</p>
             </div>
           </a>
         </div>
@@ -270,7 +270,7 @@ const Dashboard = () => {
           <a href="/reportLocais" className="card shadow-sm text-decoration-none">
             <div className="card-body text-center">
               <h5 className="card-title">Reports em Comentários</h5>
-              <p className="card-text">Locais</p>
+              <p className="card-text">Estabelecimentos</p>
             </div>
           </a>
         </div>

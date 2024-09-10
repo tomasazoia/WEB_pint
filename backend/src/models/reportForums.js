@@ -36,6 +36,7 @@ const ReportForums = sequelize.define('reportforums', {
         timestamps: false,
         freezeTableName: true
     });
+    
 ReportForums.belongsTo(ComentariosForum, { foreignKey: 'ID_COMENTARIO_REPORTADO'});
 ReportForums.belongsTo(ReportTopicos, { foreignKey: 'ID_TIPO_REPORT'});
 

@@ -195,7 +195,7 @@ const Navbar = () => {
                       className="dropdown-item"
                       to={`/locais/listarea/${area.ID_AREA}`}
                     >
-                    {area.NOME_AREA}
+                      {area.NOME_AREA}
                     </Link>
                   </li>
                 ))}

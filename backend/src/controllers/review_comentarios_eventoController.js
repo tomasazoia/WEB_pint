@@ -84,25 +84,25 @@ exports.deleteReview = async (req, res) => {
 
 // Adicionar uma review a um comentário específico
 exports.addReviewToComentario = async (req, res) => {
-    const { ID_COMENTARIO } = req.params;
+    const { id: ID_COMENTARIO } = req.params;
     const { ID_CRIADOR, REVIEW } = req.body;
 
-    try {
-        // Verificar se o comentário existe
-        const comentario = await Comentarios.findByPk(ID_COMENTARIO);
+    console.log('ID do Comentário:', ID_COMENTARIO);
+    console.log('ID do Criador:', ID_CRIADOR);
 
+    try {
+        const comentario = await Comentarios.findByPk(ID_COMENTARIO);
         if (!comentario) {
+            console.log('Comentário não encontrado na base de dados.');
             return res.status(404).json({ error: 'Comentário não encontrado.' });
         }
 
-        // Verificar se o utilizador que está criando a review existe
         const user = await Users.findByPk(ID_CRIADOR);
-
         if (!user) {
+            console.log('Utilizador não encontrado na base de dados.');
             return res.status(404).json({ error: 'Utilizador não encontrado.' });
         }
 
-        // Criar a review associada ao comentário
         const newReview = await ReviewComentariosEvento.create({
             ID_COMENTARIO,
             ID_CRIADOR,

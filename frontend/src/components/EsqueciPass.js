@@ -16,7 +16,7 @@ const EsqueciPass = () => {
       Swal.fire('Sucesso', 'Código de recuperação enviado para o seu e-mail.', 'success');
       setStep(2);
     } catch (error) {
-      Swal.fire('Erro', 'Erro ao solicitar recuperação de senha.', 'error');
+      Swal.fire('Erro', 'Erro ao solicitar recuperação de palavra-passe.', 'error');
     }
   };
 
@@ -35,7 +35,7 @@ const EsqueciPass = () => {
   const handleResetPassword = async () => {
     try {
       await axios.post('https://pintfinal-backend.onrender.com/auth/reset-password', { user_mail: email, new_password: newPassword });
-      Swal.fire('Sucesso', 'Senha redefinida com sucesso.', 'success').then(() => {
+      Swal.fire('Sucesso', 'palavra-passe redefinida com sucesso.', 'success').then(() => {
         navigate('/login'); // Redirecione para a página de login após o sucesso
       });
       setStep(1);
@@ -43,7 +43,7 @@ const EsqueciPass = () => {
       setCode('');
       setNewPassword('');
     } catch (error) {
-      Swal.fire('Erro', 'Erro ao redefinir senha.', 'error');
+      Swal.fire('Erro', 'Erro ao redefinir palavra-passe.', 'error');
     }
   };
 
@@ -53,7 +53,7 @@ const EsqueciPass = () => {
         <div className="col-md-6">
           <div className="card">
             <div className="card-body">
-              <h2 className="text-center mb-4">Recuperação de Senha</h2>
+              <h2 className="text-center mb-4">Recuperação de palavra-passe</h2>
               
               {step === 1 && (
                 <>
@@ -92,7 +92,7 @@ const EsqueciPass = () => {
               {step === 3 && (
                 <>
                   <div className="mb-3">
-                    <label htmlFor="newPassword" className="form-label">Nova Senha:</label>
+                    <label htmlFor="newPassword" className="form-label">Nova palavra-passe:</label>
                     <input
                       type="password"
                       className="form-control"
@@ -102,7 +102,7 @@ const EsqueciPass = () => {
                       required
                     />
                   </div>
-                  <button onClick={handleResetPassword} className="btn btn-primary w-100">Redefinir Senha</button>
+                  <button onClick={handleResetPassword} className="btn btn-primary w-100">Redefinir palavra-passe</button>
                 </>
               )}
             </div>

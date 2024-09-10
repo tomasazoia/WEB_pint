@@ -64,7 +64,7 @@ const Registar = () => {
         NTELEMOVEL: nTelemovel,
         ID_CENTRO: idCentro,
       });
-      setSuccessMessage('Utilizador registrado com sucesso! A senha foi enviada para o seu e-mail.');
+      setSuccessMessage('Utilizador registrado com sucesso! A palavra-passe foi enviada para o seu e-mail.');
       setTimeout(() => {
         navigate('/login');
       }, 2000);
@@ -122,6 +122,8 @@ const Registar = () => {
                     onChange={(e) => setNif(e.target.value)}
                     required
                     disabled={!isFormActive} 
+                    pattern="[0-9]*"
+                    inputMode="numeric"
                   />
                 </div>
                 <div className="mb-3">
@@ -148,6 +150,8 @@ const Registar = () => {
                     value={nTelemovel}
                     onChange={(e) => setNTelemovel(e.target.value)}
                     disabled={!isFormActive} 
+                    pattern="[0-9]*"
+                    inputMode="numeric"
                   />
                 </div>
                 <div className="mb-3">

@@ -23,10 +23,10 @@ const sendResetCodeEmail = async (user_mail, resetCode) => {
   await transporter.sendMail({
     from: '"SoftShares" <pint.softinsa@gmail.com>',
     to: user_mail,
-    subject: "Recuperação de Senha - Código de Verificação",
+    subject: "Recuperação de palavra-passe - Código de Verificação",
     text: `Prezado(a) Cliente,
 
-Recebemos uma solicitação para redefinir a senha da sua conta. Para concluir este processo, por favor, utilize o seguinte código de verificação:
+Recebemos uma solicitação para redefinir a palavra-passe da sua conta. Para concluir este processo, por favor, utilize o seguinte código de verificação:
 
 Código de Verificação: ${resetCode}
 
@@ -37,7 +37,7 @@ Equipe SoftShares`,
   });
 };
 
-// Rota para solicitar a recuperação de senha
+// Rota para solicitar a recuperação de palavra-passe
 const requestPasswordReset = async (req, res) => {
   const { user_mail } = req.body;
 
@@ -60,8 +60,8 @@ const requestPasswordReset = async (req, res) => {
 
     res.status(200).json({ message: 'Código de recuperação enviado para o e-mail.' });
   } catch (error) {
-    console.error('Erro ao solicitar redefinição de senha:', error);
-    res.status(500).json({ message: 'Erro ao solicitar redefinição de senha.' });
+    console.error('Erro ao solicitar redefinição de palavra-passe:', error);
+    res.status(500).json({ message: 'Erro ao solicitar redefinição de palavra-passe.' });
   }
 };
 
@@ -96,7 +96,7 @@ const confirmResetCode = async (req, res) => {
 };
 
 
-// Rota para redefinir a senha
+// Rota para redefinir a palavra-passe
 const resetPassword = async (req, res) => {
   const { user_mail, new_password } = req.body;
 
@@ -108,10 +108,10 @@ const resetPassword = async (req, res) => {
       { where: { user_mail } }
     );
 
-    res.status(200).json({ message: 'Senha redefinida com sucesso.' });
+    res.status(200).json({ message: 'palavra-passe redefinida com sucesso.' });
   } catch (error) {
-    console.error('Erro ao redefinir senha:', error);
-    res.status(500).json({ message: 'Erro ao redefinir senha.' });
+    console.error('Erro ao redefinir palavra-passe:', error);
+    res.status(500).json({ message: 'Erro ao redefinir palavra-passe.' });
   }
 };
 
@@ -158,7 +158,7 @@ const resetPassword = async (req, res) => {
 
 
 const generateRandomPassword = () => {
-  return Math.random().toString(36).slice(-8);  // Gera uma senha aleatória de 8 caracteres
+  return Math.random().toString(36).slice(-8);  // Gera uma palavra-passe aleatória de 8 caracteres
 };
 
 const sendPasswordEmail = async (user_mail, generatedPassword) => {
@@ -180,11 +180,11 @@ const sendPasswordEmail = async (user_mail, generatedPassword) => {
 
     Seja bem-vindo(a) à SoftShares! Estamos felizes em tê-lo(a) connosco.
 
-    A sua conta foi criada com sucesso. Para acessar a plataforma, utilize a senha temporária fornecida abaixo:
+    A sua conta foi criada com sucesso. Para acessar a plataforma, utilize a palavra-passe temporária fornecida abaixo:
 
-    Senha temporária: ${generatedPassword}
+    palavra-passe temporária: ${generatedPassword}
 
-    Por razões de segurança, recomendamos que você altere sua senha assim que fizer login pela primeira vez. Pode fazer isso acessando a seção de "Redefinir Senha" após o login.
+    Por razões de segurança, recomendamos que você altere sua palavra-passe assim que fizer login pela primeira vez. Pode fazer isso acessando a seção de "Redefinir palavra-passe" após o login.
 
     Caso tenha alguma dúvida ou precise de assistência, não hesite em entrar em contato com a nossa equipa de suporte.
 
@@ -229,7 +229,7 @@ const create = async (req, res) => {
       return res.status(400).json({ message: 'Número de Telemóvel já está em uso.' });
     }
 
-    // Gerar senha aleatória
+    // Gerar palavra-passe aleatória
     const generatedPassword = generateRandomPassword();
     const hashedPassword = await bcrypt.hash(generatedPassword, 10);
 
@@ -247,10 +247,10 @@ const create = async (req, res) => {
       reset_password: true,
     });
 
-    // Enviar email com a senha gerada
+    // Enviar email com a palavra-passe gerada
     await sendPasswordEmail(user_mail, generatedPassword);
 
-    res.status(201).json({ message: 'Utilizador criado com sucesso. Uma senha temporária foi enviada para o seu email.', user: newUser });
+    res.status(201).json({ message: 'Utilizador criado com sucesso. Uma palavra-passe temporária foi enviada para o seu email.', user: newUser });
   } catch (error) {
     console.error('Erro ao criar utilizador:', error);
     res.status(500).json({ message: 'Erro ao criar utilizador.', error: error.message });
@@ -261,7 +261,7 @@ const login = async (req, res) => {
   const { user_mail, user_password } = req.body;
 
   if (!user_mail || !user_password) {
-    return res.status(400).json({ message: 'E-mail e senha são obrigatórios.' });
+    return res.status(400).json({ message: 'E-mail e palavra-passe são obrigatórios.' });
   }
 
   try {
@@ -272,6 +272,7 @@ const login = async (req, res) => {
     }
 
     // Verifique se o usuário é administrador
+    
     if (!user.ADMINISTRADOR) {
       return res.status(403).json({ message: 'Acesso restrito a administradores.' });
     }
@@ -279,7 +280,7 @@ const login = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(user_password, user.user_password);
 
     if (!isPasswordValid) {
-      return res.status(400).json({ message: 'Senha incorreta.' });
+      return res.status(400).json({ message: 'palavra-passe incorreta.' });
     }
 
     const token = jwt.sign({ user_id: user.user_id, user_mail: user.user_mail }, SECRET_KEY, { expiresIn: '1h' });
@@ -302,7 +303,7 @@ const loginMobile = async (req, res) => {
   const { user_mail, user_password } = req.body;
 
   if (!user_mail || !user_password) {
-    return res.status(400).json({ message: 'E-mail e senha são obrigatórios.' });
+    return res.status(400).json({ message: 'E-mail e palavra-passe são obrigatórios.' });
   }
 
   try {
@@ -320,7 +321,7 @@ const loginMobile = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(user_password, user.user_password);
 
     if (!isPasswordValid) {
-      return res.status(400).json({ message: 'Senha incorreta.' });
+      return res.status(400).json({ message: 'palavra-passe incorreta.' });
     }
 
     const token = jwt.sign({ user_id: user.user_id, user_mail: user.user_mail }, SECRET_KEY, { expiresIn: '1h' });
@@ -402,7 +403,7 @@ const googleLogin = async (req, res) => {
         user_mail,
         user_password: null,
         email_confirmed: true,
-        reset_password: true, // Primeiro login, precisa redefinir a senha
+        reset_password: true, // Primeiro login, precisa redefinir a palavra-passe
         NIF: 123456789, // Defina um NIF padrão ou inválido
         DATAINICIO: new Date(), // Defina a data atual como valor padrão para DATAINICIO
         MORADA: 'Endereço não fornecido', // Ou qualquer valor padrão apropriado
@@ -486,17 +487,18 @@ const googleLoginMobile = async (req, res) => {
     // Gerar o token JWT
     const token = jwt.sign({ user_id: user.user_id, user_mail: user.user_mail }, SECRET_KEY, { expiresIn: '1h' });
 
-    // Retornar a resposta com o token e a flag firstLogin
-    res.status(200).json({ message: 'Login com Google bem-sucedido.', token, firstLogin });
+    // Retornar a resposta com o token, a flag firstLogin e o status VALIDAR
+    res.status(200).json({ 
+      message: 'Login com Google bem-sucedido.', 
+      token, 
+      firstLogin, 
+      isValid: user.VALIDAR  // Adicionar campo isValid à resposta
+    });
   } catch (error) {
     console.error('Erro ao fazer login com Google:', error);
     res.status(500).json({ message: 'Erro ao fazer login com Google.' });
   }
 };
-
-
-
-
 
 const facebookLogin = async (req, res) => {
   const { user_mail, user_name, user_photo } = req.body;
@@ -512,7 +514,7 @@ const facebookLogin = async (req, res) => {
         user_mail,
         user_password: null,
         email_confirmed: true,
-        reset_password: true,  // Indica que é o primeiro login e precisa redefinir a senha
+        reset_password: true,  // Indica que é o primeiro login e precisa redefinir a palavra-passe
         NIF: '000000000', // Defina um NIF padrão ou inválido, caso necessário
         DATAINICIO: new Date(), // Data atual como valor padrão para DATAINICIO
         MORADA: 'Endereço não fornecido', // Valor padrão para MORADA
@@ -570,7 +572,7 @@ const changePassword = async (req, res) => {
     const isMatch = await bcrypt.compare(oldPassword, user.user_password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: 'Senha antiga incorreta.' });
+      return res.status(400).json({ message: 'palavra-passe antiga incorreta.' });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -578,10 +580,10 @@ const changePassword = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: 'Senha alterada com sucesso.' });
+    res.status(200).json({ message: 'palavra-passe alterada com sucesso.' });
   } catch (error) {
-    console.error('Erro ao alterar a senha do utilizador:', error);
-    res.status(500).json({ message: 'Erro ao alterar a senha do utilizador.', error: error.message });
+    console.error('Erro ao alterar a palavra-passe do utilizador:', error);
+    res.status(500).json({ message: 'Erro ao alterar a palavra-passe do utilizador.', error: error.message });
   }
 };
 

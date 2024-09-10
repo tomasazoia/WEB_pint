@@ -10,7 +10,6 @@ const subarea = require('../models/subArea');
 const Notificacoes = require('../models/notificacoes');
 const userPreferences = require('../models/userPreferences');
 const { Storage } = require('@google-cloud/storage');
-const fs = require('fs'); // Importando o módulo fs
 
 // Função para criar um novo local
 const createLocal = async (req, res) => {
@@ -88,6 +87,80 @@ const createLocal = async (req, res) => {
     res.status(500).json({ error: 'Erro ao criar local' });
   }
 };
+
+// Função para criar um novo local
+const createLocalMobile = async (req, res) => {
+  try {
+    const {
+      ID_CENTRO, // Agora recebido no formulário
+      ID_CRIADOR,
+      ID_AREA,
+      ID_SUB_AREA,
+      DESIGNACAO_LOCAL,
+      LOCALIZACAO,
+      REVIEW,
+      PRECO
+    } = req.body;
+
+    // Verificar se todos os campos obrigatórios estão presentes
+    if (!ID_CENTRO || !ID_CRIADOR || !ID_AREA || !DESIGNACAO_LOCAL || !LOCALIZACAO || !PRECO) {
+      return res.status(400).json({ error: 'Campos obrigatórios não fornecidos' });
+    }
+
+    // Verifica se o utilizador existe
+    const user = await Users.findByPk(ID_CRIADOR);
+    if (!user) {
+      return res.status(404).json({ error: 'Utilizador não encontrado' });
+    }
+
+    // Verifica se o arquivo de foto foi enviado
+    const foto = req.file ? req.file.path : null;
+
+    // Criar o novo local com o ID_CENTRO fornecido no formulário
+    const novoLocal = await Locais.create({
+      ID_CENTRO,  // Centro recebido no formulário
+      ID_CRIADOR,
+      ID_AREA,
+      ID_SUB_AREA: ID_SUB_AREA || null, // Certifica-se de que será null se não estiver definido
+      DESIGNACAO_LOCAL,
+      LOCALIZACAO,
+      REVIEW,
+      PRECO,
+      foto
+    });
+
+    // Buscar utilizadores que tenham a área ou subárea nas preferências
+    const utilizadoresComPreferencias = await userPreferences.findAll({
+      where: {
+        [Sequelize.Op.or]: [
+          { ID_AREA },
+          { ID_SUBAREA: ID_SUB_AREA || null }
+        ]
+      },
+      include: [{
+        model: Users,
+        attributes: ['ID_FUNCIONARIO', 'user_name', 'user_mail']
+      }]
+    });
+
+    // Criar notificações para esses utilizadores
+    const notificacoes = utilizadoresComPreferencias.map(preferencia => ({
+      ID_USER: preferencia.ID_USER,
+      MENSAGEM: `Um novo local na sua área de interesse foi criado: ${DESIGNACAO_LOCAL}`,
+      LIDA: false,
+      DATA_NOTIFICACAO: new Date()
+    }));
+
+    await Notificacoes.bulkCreate(notificacoes); // Criar todas as notificações de uma vez
+
+    // Retornar resposta com sucesso e os dados do local criado
+    res.status(201).json(novoLocal);
+  } catch (error) {
+    console.error('Erro ao criar local:', error);
+    res.status(500).json({ error: 'Erro ao criar local' });
+  }
+};
+
 
 const listLocaisByUserCentro = async (req, res) => {
   const { userId } = req.params; // Assumindo que o ID do usuário seja passado como parâmetro
@@ -569,6 +642,7 @@ const invalidateLocal = async (req, res) => {
 
 module.exports = {
   createLocal,
+  createLocalMobile,
   listLocaisByUserCentro,
   listLocaisByUserCentroInvalid,
   listLocais,

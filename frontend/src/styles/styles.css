@@ -16,6 +16,10 @@
   min-height: 100vh;
 }
 
+.evento-passado .card {
+  background-color: #e3e3e3; /* Cor de fundo cinzenta */
+}
+
 .card {
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

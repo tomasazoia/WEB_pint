@@ -6,6 +6,7 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 router.post('/create', upload.single('foto'), localRoute.createLocal);
+router.post('/createmob', upload.single('foto'), localRoute.createLocalMobile);
 router.get('/user/:userId/centro', localRoute.listLocaisByUserCentro);
 router.get('/invalid/user/:userId/centro', localRoute.listLocaisByUserCentroInvalid);
 router.get('/list', localRoute.listLocais);

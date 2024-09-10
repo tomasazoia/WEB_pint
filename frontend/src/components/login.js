@@ -73,8 +73,8 @@ const Login = () => {
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Erro ao fazer login.';
-      if (errorMessage === 'Senha incorreta.') {
-        Swal.fire('Erro', 'Senha incorreta.', 'error');
+      if (errorMessage === 'palavra-passe incorreta.') {
+        Swal.fire('Erro', 'palavra-passe incorreta.', 'error');
       } else if (errorMessage === 'Acesso restrito a administradores.') {
         Swal.fire('Erro', 'Acesso restrito a administradores.', 'error');
       } else if (errorMessage === 'Utilizador não encontrado.') {
@@ -166,7 +166,7 @@ const Login = () => {
                 </div>
                 <div className="mb-3 position-relative">
                   <label htmlFor="password" className="form-label">
-                    <FontAwesomeIcon icon={faLock} /> Senha:
+                    <FontAwesomeIcon icon={faLock} /> Palavra-Passe:
                   </label>
                   <div className="input-group">
                     <input
@@ -210,7 +210,7 @@ const Login = () => {
                 Não tem uma conta? <Link to="/register">Registrar</Link>
               </p>
               <p className="mt-3 text-center">
-                Esqueceu sua senha? <Link to="/forgot-password">Recuperar</Link>
+                Esqueceu-se da palavra-passe? <Link to="/forgot-password">Recuperar</Link>
               </p>
 
             </div>

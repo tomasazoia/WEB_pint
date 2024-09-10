@@ -102,11 +102,6 @@ const EditarLocal = () => {
             setSubAreas(response.data);
           } else {
             setSubAreas([]);
-            MySwal.fire({
-              icon: 'info',
-              title: 'Sem Subáreas',
-              text: 'Não existem subáreas para a área selecionada.'
-            });
           }
         } catch (error) {
           console.error('Erro ao carregar subáreas:', error);

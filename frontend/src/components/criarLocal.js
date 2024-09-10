@@ -126,11 +126,6 @@ const AddLocal = () => {
         } catch (error) {
           console.error('Nao existem subareas para a area selecionada:', error);
           setSubAreas([]); // Limpar subáreas se houver erro
-          MySwal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: 'Nao existem subareas para a area selecionada.'
-          });
         }
       } else {
         setSubAreas([]); // Limpar subáreas se nenhuma área estiver selecionada
@@ -311,7 +306,7 @@ const AddLocal = () => {
         <div className="mb-3">
           <label htmlFor="PRECO" className="form-label">Preço</label>
           <input
-            type="text"
+            type="number"
             id="PRECO"
             name="PRECO"
             className="form-control"
@@ -320,6 +315,8 @@ const AddLocal = () => {
             required
             disabled={!isFormActive}
             placeholder="Caso não tenha preço coloque 0"
+            pattern="[0-9]*"
+            inputMode="numeric"
           />
         </div>
 

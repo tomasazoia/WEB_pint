@@ -128,7 +128,7 @@ const LocaisArea = () => {
 
     return (
         <div className="container mt-4">
-            <h1>Recomendações da Área</h1>
+            <h1>Estabelecimentos da Área</h1>
             {error && <div className="alert alert-danger">{error}</div>}
             <div className="row"> {/* Adiciona a classe row para a grid do Bootstrap */}
                 {locais.map((local) => (

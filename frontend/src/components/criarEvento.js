@@ -19,6 +19,8 @@ const CriarEvento = () => {
   const [areas, setAreas] = useState([]);
   const [subAreas, setSubAreas] = useState([]);
   const [showNewSubArea, setShowNewSubArea] = useState(false);
+  const [dataAtual, setDataAtual] = useState('');
+
   const [formValues, setFormValues] = useState({
     ID_CENTRO: '',
     ID_CRIADOR: '',
@@ -26,7 +28,7 @@ const CriarEvento = () => {
     TIPO_EVENTO: '',
     DATA_EVENTO: '',
     DISPONIBILIDADE: false,
-    LOCALIZACAO: '',
+    LOCALIZACAO: '40.6574, -7.9140', // Localização padrão
     ID_AREA: '',
     ID_SUB_AREA: '',
     N_PARTICIPANTES: '',
@@ -73,13 +75,13 @@ const CriarEvento = () => {
         shadowSize: [41, 41]
       });
 
-      mapRef.current = L.map('map').setView([40.6574, -7.9140], 14);
+      mapRef.current = L.map('map').setView([40.6574, -7.9140], 14); // Localização padrão
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(mapRef.current);
 
-      const marker = L.marker([40.6574, -7.9140], { icon: defaultIcon, draggable: true }).addTo(mapRef.current);
+      const marker = L.marker([40.6574, -7.9140], { icon: defaultIcon, draggable: true }).addTo(mapRef.current); // Localização padrão
 
       mapRef.current.on('click', (event) => {
         const { lat, lng } = event.latlng;
@@ -98,7 +100,51 @@ const CriarEvento = () => {
         }));
       });
     }
+    const agora = new Date();
+    const ano = agora.getFullYear();
+    const mes = String(agora.getMonth() + 1).padStart(2, '0'); // Mês começa em 0, então adicionamos 1
+    const dia = String(agora.getDate()).padStart(2, '0');
+    const horas = String(agora.getHours()).padStart(2, '0');
+    const minutos = String(agora.getMinutes()).padStart(2, '0');
+
+    // Formata a data para o formato esperado por datetime-local (YYYY-MM-DDTHH:mm)
+    const dataFormatada = `${ano}-${mes}-${dia}T${horas}:${minutos}`;
+    setDataAtual(dataFormatada);
   }, []);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+
+    if (!token) {
+      setError('Token de autenticação não encontrado.');
+      return;
+    }
+
+    axios.get('https://pintfinal-backend.onrender.com/user/profile', {
+      headers: {
+        'x-auth-token': token
+      }
+    })
+      .then(response => {
+        setFormValues(prevFormValues => ({
+          ...prevFormValues,
+          ID_CRIADOR: response.data.ID_FUNCIONARIO,
+          ID_CENTRO: response.data.ID_CENTRO
+        }));
+      })
+      .catch(error => {
+        setError('Erro ao obter os dados do utilizador.');
+        console.error('Erro ao obter os dados do utilizador:', error);
+        MySwal.fire({
+          icon: 'error',
+          title: 'Erro',
+          text: 'Erro ao obter os dados do utilizador.'
+        });
+      });
+  }, []);
+
+  // O restante do código permanece o mesmo, com o valor inicial da localização já preenchido.
+
 
   useEffect(() => {
     const token = sessionStorage.getItem('token');
@@ -167,7 +213,6 @@ const CriarEvento = () => {
     });
   };
 
-  const dataAtual = new Date().toISOString().split('T')[0];
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -367,7 +412,9 @@ const CriarEvento = () => {
             className="form-control"
             value={formValues.N_PARTICIPANTES}
             onChange={handleInputChange}
-            disabled={!isFormActive} // Desabilita se o formulário estiver inativo
+            disabled={!isFormActive}
+            pattern="[0-9]*"
+            inputMode="numeric"
           />
         </div>
 

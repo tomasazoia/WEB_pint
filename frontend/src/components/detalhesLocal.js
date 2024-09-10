@@ -283,7 +283,7 @@ const DetalhesLocal = () => {
 
         </div>
       </div>
-      <h2 className="mt-3 mb-4 text-center">Compartilhar Evento</h2>
+      <h2 className="mt-3 mb-4 text-center">Compartilhar Estabelecimento</h2>
       <div className="d-flex justify-content-center mb-4">
         <FacebookShareButton url={shareUrl} quote={title} className="me-3">
           <FacebookIcon size={40} round />

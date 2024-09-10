@@ -119,11 +119,6 @@ const EditarEvento = () => {
                 } catch (error) {
                     console.error('Erro ao carregar subáreas:', error);
                     setSubAreas([]);
-                    MySwal.fire({
-                        icon: 'error',
-                        title: 'Erro',
-                        text: 'Erro ao carregar subáreas para a área selecionada.',
-                    });
                 }
             } else {
                 setSubAreas([]);
@@ -263,13 +258,15 @@ const EditarEvento = () => {
                 </div>
                 <div className="form-group p-2">
                     <label>Disponibilidade:</label>
-                    <input
-                        type="text"
+                    <select
                         className="form-control"
-                        name="DISPONIBILIDADE"
                         value={evento.DISPONIBILIDADE}
                         onChange={handleChange}
-                    />
+                        name="DISPONIBILIDADE" // Adiciona o atributo `name` para o controle de formulários
+                    >
+                        <option value={true}>Disponível</option>
+                        <option value={false}>Indisponível</option>
+                    </select>
                 </div>
                 <div className="form-group p-2">
                     <label>Centro:</label>

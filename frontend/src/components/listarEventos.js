@@ -102,55 +102,60 @@ const ListarEventos = () => {
                 Criar um Evento
             </Link>
             <div className="row">
-                {eventos.map((evento) => (
-                    <div className="col-md-3 mt-4" key={evento.ID_EVENTO}>
-                        <div className="card mb-4 h-100 d-flex flex-column">
-                            <Link to={`/evento/get/${evento.ID_EVENTO}`}>
-                                {evento.foto && (
-                                    <img
-                                        src={`https://pintfinal-backend.onrender.com/${evento.foto}`}
-                                        className="card-img-top img-evento"
-                                        alt={evento.NOME_EVENTO}
-                                    />
-                                )}
-                            </Link>
+                {eventos.map((evento) => {
+                    // Verificar se a data do evento é anterior à data atual
+                    const isPastEvent = new Date(evento.DATA_EVENTO) < new Date();
 
-                            <div className="card-body d-flex flex-column">
-                                <h5 className="card-title"><strong>Título do evento: </strong>{evento.NOME_EVENTO}</h5>
-                                <p className="card-text flex-grow-1"><strong>Tipo de Evento: </strong>{evento.TIPO_EVENTO}</p>
-                                <p className="card-text flex-grow-1"><strong>Localização: </strong>{evento.cidade}</p>
-                                <p className="card-text flex-grow-1"><strong>Área do evento: </strong>{evento.area.NOME_AREA}</p>
-                                <p className="card-text flex-grow-1"><strong>Sub Área do evento: </strong>{evento.sub_area ? evento.sub_area.NOME_SUBAREA : "Sub Área não associada"}</p>
-                                <p className="card-text">
-                                    <small className="text-muted">
-                                        Data: {new Date(evento.DATA_EVENTO).toLocaleString('pt-BR', {
-                                            day: '2-digit',
-                                            month: '2-digit',
-                                            year: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            hour12: true
-                                        })}
-                                    </small>
-                                </p>
-
-                                {/* Botão de Invalidar Evento */}
-                                <button 
-                                    onClick={() => handleInvalidarEvento(evento.ID_EVENTO)} 
-                                    className="btn btn-danger mb-2"
-                                >
-                                    Invalidar Evento
-                                </button>
-
-                                {/* Botão de Editar Evento */}
-                                <Link to={`/eventos/edit/${evento.ID_EVENTO}`} className="btn btn-warning mt-2" style={{ color: 'white' }}>
-                                    Editar Evento
+                    return (
+                        <div className={`col-md-3 mt-4 ${isPastEvent ? 'evento-passado' : ''}`} key={evento.ID_EVENTO}>
+                            <div className="card mb-4 h-100 d-flex flex-column">
+                                <Link to={`/evento/get/${evento.ID_EVENTO}`}>
+                                    {evento.foto && (
+                                        <img
+                                            src={`https://pintfinal-backend.onrender.com/${evento.foto}`}
+                                            className="card-img-top img-evento"
+                                            alt={evento.NOME_EVENTO}
+                                        />
+                                    )}
                                 </Link>
+
+                                <div className="card-body d-flex flex-column">
+                                    <h5 className="card-title"><strong>Título do evento: </strong>{evento.NOME_EVENTO}</h5>
+                                    <p className="card-text flex-grow-1"><strong>Tipo de Evento: </strong>{evento.TIPO_EVENTO}</p>
+                                    <p className="card-text flex-grow-1"><strong>Localização: </strong>{evento.cidade}</p>
+                                    <p className="card-text flex-grow-1"><strong>Área do evento: </strong>{evento.area.NOME_AREA}</p>
+                                    <p className="card-text flex-grow-1"><strong>Sub Área do evento: </strong>{evento.sub_area ? evento.sub_area.NOME_SUBAREA : "Sub Área não associada"}</p>
+                                    <p className="card-text">
+                                        <small className="text-muted">
+                                            Data: {new Date(evento.DATA_EVENTO).toLocaleString('pt-BR', {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                year: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                hour12: true
+                                            })}
+                                        </small>
+                                    </p>
+
+                                    {/* Botão de Invalidar Evento */}
+                                    <button 
+                                        onClick={() => handleInvalidarEvento(evento.ID_EVENTO)} 
+                                        className="btn btn-danger mb-2"
+                                    >
+                                        Invalidar Evento
+                                    </button>
+
+                                    {/* Botão de Editar Evento */}
+                                    <Link to={`/eventos/edit/${evento.ID_EVENTO}`} className="btn btn-warning mt-2" style={{ color: 'white' }}>
+                                        Editar Evento
+                                    </Link>
+                                </div>
+                                
                             </div>
-                            
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );

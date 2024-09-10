@@ -63,7 +63,7 @@ const User = sequelize.define('User', {
   },
   reset_password: {
     type: DataTypes.BOOLEAN,
-    defaultValue: true,  // Indica que o usuário precisa redefinir a senha
+    defaultValue: true,  // Indica que o usuário precisa redefinir a palavra-passe
   },
   reset_password_code: {
     type: DataTypes.STRING(255), // Campo para armazenar o código de recuperação criptografado

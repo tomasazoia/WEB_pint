@@ -154,6 +154,84 @@ const createEvento = async (req, res) => {
 };
 
 
+const createEventoMobile = async (req, res) => {
+  try {
+    const {
+      ID_CENTRO, // Agora recebido no formulário
+      ID_CRIADOR,
+      NOME_EVENTO,
+      TIPO_EVENTO,
+      DATA_EVENTO,
+      DISPONIBILIDADE,
+      LOCALIZACAO,
+      ID_AREA,
+      ID_SUB_AREA,
+      N_PARTICIPANTES,
+      ID_APROVADOR,
+    } = req.body;
+
+    // Verificar se todos os campos obrigatórios estão presentes
+    if (!ID_CENTRO || !ID_CRIADOR || !NOME_EVENTO || !TIPO_EVENTO || !DATA_EVENTO) {
+      return res.status(400).json({ error: 'Campos obrigatórios não fornecidos' });
+    }
+
+    // Verifica se o utilizador existe
+    const user = await Users.findByPk(ID_CRIADOR);
+    if (!user) {
+      return res.status(404).json({ error: 'Utilizador não encontrado' });
+    }
+
+    // Verifica se existe um arquivo de foto
+    const foto = req.file ? req.file.path : null;
+
+    // Criar o novo evento com o ID_CENTRO fornecido no formulário
+    const novoEvento = await Eventos.create({
+      ID_CENTRO,  // Centro recebido no formulário
+      ID_CRIADOR,
+      NOME_EVENTO,
+      TIPO_EVENTO,
+      DATA_EVENTO,
+      DISPONIBILIDADE,
+      LOCALIZACAO,
+      ID_AREA,
+      ID_SUB_AREA: ID_SUB_AREA || null, // Certifica-se de que será null se não estiver definido
+      N_PARTICIPANTES,
+      ID_APROVADOR,
+      foto
+    });
+
+    // Buscar utilizadores que tenham a área ou subárea nas preferências
+    const utilizadoresComPreferencias = await userPreferences.findAll({
+      where: {
+        [Sequelize.Op.or]: [
+          { ID_AREA },
+          { ID_SUBAREA: ID_SUB_AREA || null }
+        ]
+      },
+      include: [{
+        model: Users,
+        attributes: ['ID_FUNCIONARIO', 'user_name', 'user_mail']
+      }]
+    });
+
+    // Criar notificações para esses utilizadores
+    const notificacoes = utilizadoresComPreferencias.map(preferencia => ({
+      ID_USER: preferencia.ID_USER,
+      MENSAGEM: `Um novo evento na sua área de interesse foi criado: ${NOME_EVENTO}`,
+      LIDA: false,
+      DATA_NOTIFICACAO: new Date()
+    }));
+
+    await Notificacoes.bulkCreate(notificacoes); // Criar todas as notificações de uma vez
+
+    res.status(201).json(novoEvento);
+  } catch (error) {
+    console.error('Erro ao criar evento:', error);
+    res.status(500).json({ error: 'Erro ao criar evento' });
+  }
+};
+
+
 
 const eventoDetail = async (req, res) => {
   const { id } = req.params;
@@ -230,14 +308,7 @@ const listEventosDispCentroCal = async (req, res) => {
         DISPONIBILIDADE: true
       }
     });
-// Formatar as datas para ISO 8601
-const eventosFormatados = eventos.map(evento => {
-  return {
-    ...evento.toJSON(),
-    DATA_EVENTO: new Date(evento.DATA_EVENTO).toISOString(), // Garantir formato ISO 8601
-  };
-});
-    
+
     res.status(200).json(eventos);
   } catch (error) {
     console.error('Erro ao listar eventos disponíveis no centro do utilizador:', error);
@@ -512,6 +583,23 @@ const deleteEvento = async (req, res) => {
       return res.status(404).json({ message: 'Evento não encontrado.' });
     }
 
+    // Buscar os participantes do evento
+    const participantes = await ParticipantesEvento.findAll({
+      where: { ID_EVENTO: eventoId },
+      include: [{
+        model: Users,
+        attributes: ['ID_FUNCIONARIO', 'user_name', 'user_mail']
+      }]
+    });
+
+    const notificacoes = participantes.map(participante => ({
+      ID_USER: participante.User.ID_FUNCIONARIO,
+      MENSAGEM: `O evento ${evento.NOME_EVENTO} no qual participava foi eliminado, contacte o criador do evento para mais informações.`,
+      LIDA: false
+    }));
+
+    await Notificacoes.bulkCreate(notificacoes);
+
     await evento.destroy();
 
     res.status(200).json({ message: 'Evento eliminado com sucesso.' });
@@ -617,27 +705,5 @@ const eventos_por_area = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-const invalidateEvento = async (req, res) => {
-  const { id } = req.params; // ID do local passado como parâmetro na URL
 
-  try {
-    // Encontrar o local pelo ID
-    const evento = await Eventos.findByPk(id);
-
-    if (!evento) {
-      return res.status(404).json({ message: 'Evento não encontrado.' });
-    }
-
-    // Atualizar o campo VALIDAR para true
-    evento.DISPONIBILIDADE = false;
-
-    // Salvar as alterações no banco de dados
-    await evento.save();
-
-    res.status(200).json({ message: 'Evento validado com sucesso.', evento });
-  } catch (error) {
-    console.error('Erro ao validar evento:', error);
-    res.status(500).json({ message: 'Erro ao validar evento.', error: error.message });
-  }
-};
-module.exports = { listEventosByUserCentro, createEvento, listEventos, listEventosDispCentroCal, updateEvento, deleteEvento, eventoDetail, listEventosDisp, listEventosDispCentro, listEventosByArea, listarEventosCriador,listEventosBySubArea,eventos_por_area, invalidateEvento };
+module.exports = { listEventosByUserCentro, createEvento, createEventoMobile, listEventos, listEventosDispCentroCal, updateEvento, deleteEvento, eventoDetail, listEventosDisp, listEventosDispCentro, listEventosByArea, listarEventosCriador,listEventosBySubArea,eventos_por_area };

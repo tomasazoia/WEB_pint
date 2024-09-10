@@ -1,5 +1,8 @@
 const ComentariosForum = require('../models/comentarios_forum');
 const Forum = require('../models/forum');
+const Users = require('../models/users');
+const Notificacoes = require('../models/notificacoes');
+
 // Listar todos os comentários
 const comentario_list = async (req, res) => {
     try {
@@ -116,6 +119,26 @@ const listarComentariosPorForumInv = async (req, res) => {
         res.status(500).json({ message: 'Erro ao listar comentários.', error: error.message });
     }
 };
+
+const listarComentariosValidosPorForum = async (req, res) => {
+    try {
+        const comentarios = await ComentariosForum.findAll({
+            where: {
+                VALIDAR: true // Alterado para filtrar apenas os comentários validados
+            },
+            include: [{
+                model: Forum,
+                as: 'forum', // Alias utilizado na associação
+                attributes: ['NOME_FORUM'] // Apenas os atributos que deseja retornar
+            }],
+        });
+        res.status(200).json(comentarios);
+    } catch (error) {
+        console.error('Erro ao listar comentários válidos:', error);
+        res.status(500).json({ message: 'Erro ao listar comentários válidos.', error: error.message });
+    }
+};
+
 const invalidarComentarioForum = async (req, res) => {
     const { idComentario } = req.params;
 
@@ -180,6 +203,7 @@ module.exports = {
     comentario_update,
     comentario_delete,
     listarComentariosPorForum,
+    listarComentariosValidosPorForum,
     listarComentariosPorForumInv,
     invalidarComentarioForum,
     validarComentarioForum

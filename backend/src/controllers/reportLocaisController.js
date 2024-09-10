@@ -41,18 +41,22 @@ const createReport = async (req, res) => {
 
 // Listar todos os reports
 const getAllReports = async (req, res) => {
-    const userId = req.headers['user-id']; // Extraindo o ID do usuário dos headers
+    const userId = req.headers['user-id'];// Extraindo o ID do usuário dos headers
 
     try {
         // Obter o centro do administrador
-        const admin = await User.findByPk(userId);
+        const user = await User.findByPk(userId);
 
-        if (!admin) {
-            return res.status(404).json({ error: 'Administrador não encontrado' });
+        if (!user) {
+            return res.status(404).json({ message: 'Utilizador não encontrado.' });
         }
 
-        const idCentro = admin.ID_CENTRO;
+        // Recuperar o ID do centro associado ao utilizador
+        const centroId = user.ID_CENTRO;
 
+        if (!centroId) {
+            return res.status(404).json({ message: 'Centro do utilizador não encontrado.' });
+        }
         // Buscar reports associados aos eventos que pertencem ao centro do administrador
         const reports = await ReportLocais.findAll({
             include: [
@@ -63,7 +67,7 @@ const getAllReports = async (req, res) => {
                     include: {
                         model: Local,
                         attributes: ['ID_LOCAL', 'DESIGNACAO_LOCAL'], 
-                        where: { ID_CENTRO: idCentro } ,
+                        where: { ID_CENTRO: centroId } ,
                         as: "local"
                     }
                 },
@@ -74,6 +78,7 @@ const getAllReports = async (req, res) => {
                 }
             ]
         });
+
 
         return res.status(200).json(reports);
     } catch (error) {

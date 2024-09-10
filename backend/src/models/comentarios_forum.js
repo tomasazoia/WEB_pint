@@ -48,4 +48,5 @@ const ComentariosForum = sequelize.define('comentariosforum', {
 
 ComentariosForum.belongsTo(users, { foreignKey: 'ID_FUNCIONARIO', onDelete: 'CASCADE' });
 ComentariosForum.belongsTo(Forum, {foreignKey: 'ID_FORUM'});
+
 module.exports = ComentariosForum;

@@ -8,6 +8,7 @@ const upload = multer({ dest: 'uploads/' });
 
 router.get('/user/:userId/:centro', eventoRoute.listEventosByUserCentro);
 router.post('/create', upload.single('foto'), eventoRoute.createEvento);
+router.post('/createmob', upload.single('foto'), eventoRoute.createEventoMobile);
 router.get('/list', eventoRoute.listEventos);
 router.get('/listdispcal/:userId', eventoRoute.listEventosDispCentroCal);
 router.put('/update/:id', upload.single('foto'),eventoRoute.updateEvento);
@@ -19,7 +20,5 @@ router.get('/get/:id', eventoRoute.eventoDetail);
 router.get('/criador/eventos/:ID_CRIADOR', eventoRoute.listarEventosCriador);
 router.get('/subarea/:subAreaId/user/:userId', eventoRoute.listEventosBySubArea);
 router.get('/eventos-by-area', eventoRoute.eventos_por_area);
-router.put('/invalidate/:id', eventoRoute.invalidateEvento);
-
 
 module.exports = router;

@@ -4,6 +4,7 @@ import { Card, Button, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const ReportsView = () => {
     const [reports, setReports] = useState([]);
@@ -70,14 +71,25 @@ const ReportsView = () => {
                 setError('Token de autenticação não encontrado.');
                 return;
             }
-
+    
+            // Faz a requisição para deletar o report
             await axios.delete(`https://pintfinal-backend.onrender.com/reportforums/delete/${id}`, {
                 headers: {
                     'x-auth-token': token,
                 },
             });
-            setReports(reports.filter((report) => report.ID_COMENTARIO !== id));
+    
+            // Atualiza o estado removendo o report excluído da lista de reports
+            setReports(reports.filter((report) => report.ID_REPORT !== id));
             setShowModal(false);
+    
+            // Mostrar mensagem de sucesso usando SweetAlert
+            Swal.fire({
+                title: 'Sucesso!',
+                text: 'O report foi eliminado com sucesso.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
         } catch (error) {
             console.error('Erro ao eliminar o report:', error);
             setError('Erro ao eliminar o report.');
@@ -99,7 +111,7 @@ const ReportsView = () => {
                         <Card className="mb-4">
                             <Card.Body>
                             <Card.Text>
-                                    <strong>Nome do Evento:</strong> {report.comentariosforum.evento.NOME_FORUM}
+                                    <strong>Nome do Forum:</strong> {report.comentariosforum.forum.NOME_FORUM}
                                 </Card.Text>
                                 <Card.Text>
                                     <strong>Comentário:</strong> {report.comentariosforum.DESCRICAO}
@@ -132,7 +144,7 @@ const ReportsView = () => {
                     <Button variant="secondary" onClick={() => setShowModal(false)}>
                         Cancelar
                     </Button>
-                    <Button variant="danger" onClick={() => handleDelete(selectedReport.ID_COMENTARIO)}>
+                    <Button variant="danger" onClick={() => handleDelete(selectedReport.ID_REPORT)}>
                         Eliminar
                     </Button>
                 </Modal.Footer>
