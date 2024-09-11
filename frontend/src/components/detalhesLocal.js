@@ -201,6 +201,7 @@ const DetalhesLocal = () => {
   if (!local) {
     return null;
   }
+  
   const getPrecoSymbol = (preco) => {
     if (preco === 0) {
       return 'Gratuito/Entrada Livre';

@@ -75,7 +75,7 @@ const Perfil = () => {
       // Exibe um alerta de sucesso e então realiza o logout
       Swal.fire({
         title: 'Bem-vindo',
-        text: 'Registro bem-sucedido',
+        text: 'Registo bem-sucedido',
         icon: 'success',
         confirmButtonText: 'OK'
       }).then(() => {
@@ -96,7 +96,7 @@ const Perfil = () => {
     <div className="container mt-5">
       <div className="card shadow-lg p-3 mb-5 bg-white rounded">
         <div className="card-header bg-primary text-white text-center">
-          <h1 className="mt-3">Continue o seu registro</h1>
+          <h1 className="mt-3">Continue o seu registo</h1>
         </div>
         <div className="card-body">
           <form onSubmit={handleSubmit}>
