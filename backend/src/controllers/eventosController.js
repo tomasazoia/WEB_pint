@@ -705,5 +705,27 @@ const eventos_por_area = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+const invalidateEvento = async (req, res) => {
+  const { id } = req.params; // ID do local passado como parâmetro na URL
 
-module.exports = { listEventosByUserCentro, createEvento, createEventoMobile, listEventos, listEventosDispCentroCal, updateEvento, deleteEvento, eventoDetail, listEventosDisp, listEventosDispCentro, listEventosByArea, listarEventosCriador,listEventosBySubArea,eventos_por_area };
+  try {
+    // Encontrar o local pelo ID
+    const evento = await Eventos.findByPk(id);
+
+    if (!evento) {
+      return res.status(404).json({ message: 'Evento não encontrado.' });
+    }
+
+    // Atualizar o campo VALIDAR para true
+    evento.DISPONIBILIDADE = false;
+
+    // Salvar as alterações no banco de dados
+    await evento.save();
+
+    res.status(200).json({ message: 'Evento validado com sucesso.', evento });
+  } catch (error) {
+    console.error('Erro ao validar evento:', error);
+    res.status(500).json({ message: 'Erro ao validar evento.', error: error.message });
+  }
+};
+module.exports = { listEventosByUserCentro, createEvento, createEventoMobile, listEventos, listEventosDispCentroCal, updateEvento, deleteEvento, eventoDetail, listEventosDisp, listEventosDispCentro, listEventosByArea, listarEventosCriador,listEventosBySubArea,eventos_por_area,invalidateEvento };
